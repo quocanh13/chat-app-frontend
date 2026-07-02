@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from "../../../shared/constant"
-import type { ApiResponse, ServiceResult } from "../../../shared/types";
+import { API_ENDPOINTS } from "../../shared/constant"
+import type { ApiResponse, ServiceResult } from "../../shared/types";
 
 interface RegisterInput{
     username: string,
