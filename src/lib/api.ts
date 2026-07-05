@@ -5,7 +5,7 @@ export function request(
     url: string,
     options: RequestInit = {}
 ){
-    const { token } = useAuthStore()
+    const { token } = useAuthStore.getState()
     const headers = new Headers(options.headers)
     if (token) {
         headers.set("Authorization", `Bearer ${token}`);
