@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './App.css'
 import { RegisterPage } from './pages/register/RegisterPage'
-import { useToastStore } from './stores/toastStore'
-import { Toast } from './shared/toast/Toast'
 import { ToastContainer } from './shared/toast/ToastContainer'
+import { LoginPage } from './pages/login/LoginPage'
 
 function App() {
     return (
         <BrowserRouter>
             <ToastContainer />
             <Routes>
+                <Route path='/' element={<LoginPage />}></Route>
+                <Route path='/login' element={<LoginPage />}></Route>
                 <Route path="/register" element={<RegisterPage />} />
             </Routes>
         </BrowserRouter>
