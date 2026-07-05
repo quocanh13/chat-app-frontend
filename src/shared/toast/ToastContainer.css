@@ -1,0 +1,14 @@
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: block; /* Sử dụng block thay vì flex/grid để đảm bảo an toàn layout */
+    max-width: 350px;
+    width: 100%;
+}
+
+/* Tạo khoảng cách giữa các toast item khi xếp chồng */
+.toast-container > * + * {
+    margin-top: 10px;
+}
