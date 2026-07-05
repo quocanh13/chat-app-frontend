@@ -1,7 +1,7 @@
 
 export type ApiResponse<Data = undefined> = {
     data?: Data,
-    code?: string,
+    error?: string,
     message?: string,
     detail?: Record<string, string[]> 
 }
@@ -10,7 +10,7 @@ export class ApiError extends Error{
     constructor(message?: string, code?: string, detail?: Record<string, string[]>){
         super(message? message : "Server Error")
         this.name = "ApiError"
-        this.code = code? code : "SERVER_ERROR"
+        this.code = code ?? "SERVER_ERROR"
         this.detail = detail
     }
 
