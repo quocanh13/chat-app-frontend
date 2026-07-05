@@ -1,0 +1,124 @@
+.register-form-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-title {
+    text-align: center;
+    color: #1f2937;
+    margin-top: 0;
+    margin-bottom: 1.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+/* Khu vực bao quanh cả Icon và Input */
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    background-color: #f9fafb;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background-color 0.2s;
+}
+
+/* Hiệu ứng khi người dùng click vào Input */
+.input-container:focus-within {
+    border-color: #3b82f6;
+    /* Xanh dương */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    background-color: #ffffff;
+}
+
+/* Tuỳ chỉnh kích thước Icon */
+.input-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.75rem;
+    opacity: 0.5;
+    /* Làm mờ nhẹ icon để nhìn sang hơn */
+    object-fit: contain;
+}
+
+/* Làm cho Input trong suốt để nhìn thấy màu của container */
+.form-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: #111827;
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: #9ca3af;
+}
+
+/* CSS cho nút Submit */
+.submit-btn {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.2s,
+        transform 0.1s;
+}
+
+.submit-btn:hover {
+    background-color: #2563eb;
+}
+
+.submit-btn:active {
+    transform: scale(0.98);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    /* Màu chữ xám nhạt */
+}
+
+.login-link {
+    color: #3b82f6;
+    /* Màu xanh dương trùng với nút register */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.login-link:hover {
+    color: #2563eb;
+    /* Đậm lên khi hover chuột vào */
+    text-decoration: underline;
+    /* Gạch chân nhẹ khi hover */
+}
