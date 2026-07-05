@@ -18,7 +18,7 @@ export const useToastStore = create<ToastStore>((set) => ({
     toasts: [],
     currentId: 0,
     addToast(input) {
-        const closeTime = input.closeTime == undefined ? 5000 : input.closeTime
+        const closeTime = input.closeTime == undefined ? 10000 : input.closeTime
         set((state) => ({
             currentId: state.currentId + 1,
             toasts: [
