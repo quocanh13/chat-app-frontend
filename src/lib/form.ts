@@ -3,7 +3,6 @@ import { useToastStore } from "../stores/toastStore";
 import { TOAST_TYPE } from "../shared/types";
 
 export function onInvalid<F extends FieldValues>(errors: FieldErrors<F>){
-    console.log(errors)
     const { addToast } = useToastStore.getState()
     Object.values(errors).forEach((error)=>{
         addToast({
