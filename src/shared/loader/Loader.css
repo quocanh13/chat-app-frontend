@@ -1,0 +1,19 @@
+/* From Uiverse.io by Fernando-sv */ 
+.loader {
+  border: 3px solid rgba(255, 255, 255, 0.25); /* Đổi sang màu trắng mờ để nổi trên nút xanh */
+  border-top-color: transparent;               /* Tạo khoảng khuyết khuyết khi quay */
+  border-radius: 50%;
+  width: 16px;                                 /* Thu nhỏ lại một chút để vừa vặn với nút bấm */
+  height: 16px;
+  animation: spin89345 1s linear infinite;
+  pointer-events: none;                        /* Sửa lỗi bị đè con trỏ gạch cấm của hệ điều hành */
+}
+
+@keyframes spin89345 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
