@@ -1,17 +1,15 @@
-import type {z} from "zod";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import * as AuthApi from "./auth.api"
-import { ApiError, TOAST_TYPE } from "../../shared/types";
-import type { LoginSchema, RegisterSchema } from "./auth.dto";
+import { TOAST_TYPE } from "../../shared/types";
 import { useToastStore } from "../../stores/toastStore";
-
-type RegisterInput = z.infer<typeof RegisterSchema>;
-type LoginInput = z.infer<typeof LoginSchema>;
+import { useAuthStore } from "../../stores/authStore";
+import { handleApiError } from "../../lib/api";
 
 export function useAuth(){
     const navigate = useNavigate()
     const { addToast } = useToastStore()
+    const { setToken } = useAuthStore()
     const registerMutation = useMutation({
         mutationFn : AuthApi.register,
         onSuccess(data){
@@ -21,11 +19,20 @@ export function useAuth(){
             })
             navigate("/login")
         },
-        onError(error: ApiError){
-            addToast({type : TOAST_TYPE.ERROR, message : error.message})
-        }
+        onError : handleApiError
     })
 
+    const loginMutation = useMutation({
+        mutationFn: AuthApi.login,
+        onSuccess(data){
+            addToast({
+                type : TOAST_TYPE.SUCCESS, 
+                message : "Login successfully. Redirecting to the chat page"
+            })
+            setToken(data.token)
+        },
+        onError : handleApiError
+    })
 
-    return {registerMutation}
+    return {registerMutation, loginMutation}
 }
