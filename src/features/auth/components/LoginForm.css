@@ -1,0 +1,146 @@
+.login-form-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-title {
+    text-align: center;
+    color: #1f2937;
+    margin-top: 0;
+    margin-bottom: 1.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    background-color: #f9fafb;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background-color 0.2s;
+}
+
+.input-container:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    background-color: #ffffff;
+}
+
+.input-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.75rem;
+    opacity: 0.5;
+    object-fit: contain;
+}
+
+.form-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: #111827;
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: #9ca3af;
+}
+
+.submit-btn {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.2s,
+        transform 0.1s;
+}
+
+.submit-btn:hover {
+    background-color: #2563eb;
+}
+
+.submit-btn:active {
+    transform: scale(0.98);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.register-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.register-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+/* --- TRẠNG THÁI LOADING BỔ SUNG --- */
+
+.input-container.disabled {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.form-input:disabled {
+    cursor: not-allowed;
+}
+
+.submit-btn:disabled {
+    background-color: #93c5fd;
+    cursor: progress; 
+    transform: none !important;
+}
+
+.register-link.disabled-link {
+    color: #9ca3af;
+    cursor: not-allowed;
+    pointer-events: none;
+    text-decoration: none;
+}
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+}
