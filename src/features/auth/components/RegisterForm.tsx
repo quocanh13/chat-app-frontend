@@ -5,6 +5,7 @@ import { RegisterSchema } from "../auth.dto";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onInvalid } from "../../../lib/form";
 import { useAuth } from "../useAuth";
+import { Loader } from "../../../shared/loader/Loader"; // Sử dụng Loader dùng chung
 
 import "./RegisterForm.css";
 import nameIcon from "../../../assets/name-icon.png"
@@ -14,13 +15,15 @@ import usernameIcon from "../../../assets/username-icon.png"
 type RegisterFormData = z.infer<typeof RegisterSchema>;
 
 export function RegisterForm() {
-    const { registerMutation } = useAuth()
+    const { registerMutation } = useAuth();
+    const isLoading = registerMutation.isPending; // Trạng thái gửi request tạo tài khoản
+
     const { register, handleSubmit } = useForm<RegisterFormData>({
         resolver: zodResolver(RegisterSchema)
     });
 
     function onValid(data: RegisterFormData) {
-        registerMutation.mutate(data)
+        registerMutation.mutate(data);
     }
 
     return (
@@ -31,12 +34,13 @@ export function RegisterForm() {
                 
                 <div className="form-group">
                     <label className="form-label">Username</label>
-                    <div className="input-container">
+                    <div className={`input-container ${isLoading ? "disabled" : ""}`}>
                         <img src={usernameIcon} alt="Username Icon" className="input-icon" />
                         <input 
                             type="text" 
                             className="form-input" 
                             placeholder="Enter your username" 
+                            disabled={isLoading}
                             {...register("username")}
                         />
                     </div>
@@ -44,12 +48,13 @@ export function RegisterForm() {
 
                 <div className="form-group">
                     <label className="form-label">Password</label>
-                    <div className="input-container">
+                    <div className={`input-container ${isLoading ? "disabled" : ""}`}>
                         <img src={passwordIcon} alt="Password Icon" className="input-icon" />
                         <input 
                             type="password" 
                             className="form-input" 
                             placeholder="Enter your password" 
+                            disabled={isLoading}
                             {...register("password")}
                         />
                     </div>
@@ -57,24 +62,36 @@ export function RegisterForm() {
 
                 <div className="form-group">
                     <label className="form-label">Name</label>
-                    <div className="input-container">
+                    <div className={`input-container ${isLoading ? "disabled" : ""}`}>
                         <img src={nameIcon} alt="Name Icon" className="input-icon" />
                         <input 
                             type="text" 
                             className="form-input" 
                             placeholder="Enter your full name" 
+                            disabled={isLoading}
                             {...register("name")}
                         />
                     </div>
                 </div>
 
-                <button type="submit" className="submit-btn">
-                    Register
+                <button type="submit" className="submit-btn" disabled={isLoading}>
+                    {isLoading ? (
+                        <span className="loader-container">
+                            <Loader /> Registering...
+                        </span>
+                    ) : (
+                        "Register"
+                    )}
                 </button>
                 
                 <div className="form-footer">
                     <span>Already have an account? </span>
-                    <Link to={"/login"} className="login-link">Sign in</Link>
+                    <Link 
+                        to={isLoading ? "#" : "/login"} 
+                        className={`login-link ${isLoading ? "disabled-link" : ""}`}
+                    >
+                        Sign in
+                    </Link>
                 </div>
 
             </form>

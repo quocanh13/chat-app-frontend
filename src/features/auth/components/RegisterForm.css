@@ -47,7 +47,6 @@
 /* Hiệu ứng khi người dùng click vào Input */
 .input-container:focus-within {
     border-color: #3b82f6;
-    /* Xanh dương */
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     background-color: #ffffff;
 }
@@ -58,7 +57,6 @@
     height: 20px;
     margin-right: 0.75rem;
     opacity: 0.5;
-    /* Làm mờ nhẹ icon để nhìn sang hơn */
     object-fit: contain;
 }
 
@@ -105,12 +103,10 @@
     margin-top: 1rem;
     font-size: 0.875rem;
     color: #6b7280;
-    /* Màu chữ xám nhạt */
 }
 
 .login-link {
     color: #3b82f6;
-    /* Màu xanh dương trùng với nút register */
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s;
@@ -118,7 +114,42 @@
 
 .login-link:hover {
     color: #2563eb;
-    /* Đậm lên khi hover chuột vào */
     text-decoration: underline;
-    /* Gạch chân nhẹ khi hover */
+}
+
+/* --- ĐOẠN THÊM MỚI PHỤC VỤ TRẠNG THÁI LOADING --- */
+
+/* Hiệu ứng mờ các ô dữ liệu đầu vào */
+.input-container.disabled {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.form-input:disabled {
+    cursor: not-allowed;
+}
+
+/* Vô hiệu hóa nút nhấn, chuyển đổi con trỏ chuột sang trạng thái xử lý */
+.submit-btn:disabled {
+    background-color: #93c5fd;
+    cursor: progress; 
+    transform: none !important;
+}
+
+/* Ngăn tương tác nhấn link chuyển trang */
+.login-link.disabled-link {
+    color: #9ca3af;
+    cursor: not-allowed;
+    pointer-events: none;
+    text-decoration: none;
+}
+
+/* Container chứa khối Loader và đoạn Text */
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
 }
