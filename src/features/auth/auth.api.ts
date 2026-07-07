@@ -1,6 +1,8 @@
+import type z from "zod";
 import { request } from "../../lib/api";
 import { API_ENDPOINTS } from "../../shared/constant"
 import { ApiError } from "../../shared/types";
+import { LoginDataSchema } from "./auth.dto";
 
 interface RegisterInput{
     username: string,
@@ -15,9 +17,7 @@ interface LoginInput{
 interface RegisterData{
     id: number
 }
-interface LoginData{
-    token: string
-}
+type LoginData = z.infer<typeof LoginDataSchema>
 
 export async function register(input: RegisterInput) : Promise<RegisterData> {
     const options: RequestInit = {
@@ -49,9 +49,9 @@ export async function login(input: LoginInput) : Promise<LoginData> {
     const result = await response.json()
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
-    const data = result as LoginData
-    if(!data?.token)
+    const dto = LoginDataSchema.safeParse(result)
+    if(!dto.success)
         throw new ApiError()
 
-    return data
+    return dto.data
 }

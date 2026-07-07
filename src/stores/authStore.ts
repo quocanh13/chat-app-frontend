@@ -1,11 +1,19 @@
 import { create } from "zustand"
 
+interface Auth{
+    token: string,
+    id: number,
+    username: string,
+}
+
 interface AuthStore{
-    token: string | null,
-    setToken : (token: string | null) => void
+    auth: Auth | null,
+    setAuth: (auth: Auth | null) => void
 }
 
 export const useAuthStore = create<AuthStore>((set)=>({
-    token: null,
-    setToken(token) { set({token}) },
+    auth: null,
+    setAuth(auth) {
+        set({auth})
+    },
 }))
