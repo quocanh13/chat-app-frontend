@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { LoginSchema } from "../auth.dto"; 
+import { LoginFormSchema } from "../auth.dto"; 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onInvalid } from "../../../lib/form";
 import { useAuth } from "../useAuth";
@@ -11,14 +11,14 @@ import "./LoginForm.css";
 import passwordIcon from "../../../assets/password-icon.png"
 import usernameIcon from "../../../assets/username-icon.png"
 
-type LoginFormData = z.infer<typeof LoginSchema>;
+type LoginFormData = z.infer<typeof LoginFormSchema>;
 
 export function LoginForm() {
     const { loginMutation } = useAuth();
     const isLoading = loginMutation.isPending; 
 
     const { register, handleSubmit } = useForm<LoginFormData>({
-        resolver: zodResolver(LoginSchema)
+        resolver: zodResolver(LoginFormSchema)
     });
 
     function onValid(data: LoginFormData) {
