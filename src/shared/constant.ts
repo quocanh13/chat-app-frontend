@@ -4,12 +4,14 @@ export const API_ENDPOINTS = {
     AUTH: {
         LOGIN: API_BASE_URL + '/auth/login',
         REGISTER: API_BASE_URL + '/auth/register',
-        USER: {
-            GET_USER_BY_ID(id: number){
-                return API_BASE_URL + `/users/${id}`
-            }
-        }
     },
+    USER: {
+        GET_ME : API_BASE_URL + `/users/me`,
+        GET_MY_GROUP_LIST : API_BASE_URL + `/users/me/groups`,
+        GET_USER_BY_ID(userId: number) { return API_BASE_URL + `/users/${userId}`},
+        GET_GROUP_LIST(userId: number) { return API_BASE_URL + `/users/${userId}/groups`},
+        PUT_USER_BY_ID(userId: number) { return API_BASE_URL + `users/${userId}`}
+    }
 };
 
 export const INVALID_SCHEMA_MESSAGE = {
