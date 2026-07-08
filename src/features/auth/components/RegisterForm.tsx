@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { RegisterSchema } from "../auth.dto";
+import { RegisterFormSchema } from "../auth.dto";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onInvalid } from "../../../lib/form";
 import { useAuth } from "../useAuth";
@@ -12,14 +12,14 @@ import nameIcon from "../../../assets/name-icon.png"
 import passwordIcon from "../../../assets/password-icon.png"
 import usernameIcon from "../../../assets/username-icon.png"
 
-type RegisterFormData = z.infer<typeof RegisterSchema>;
+type RegisterFormData = z.infer<typeof RegisterFormSchema>;
 
 export function RegisterForm() {
     const { registerMutation } = useAuth();
     const isLoading = registerMutation.isPending; // Trạng thái gửi request tạo tài khoản
 
     const { register, handleSubmit } = useForm<RegisterFormData>({
-        resolver: zodResolver(RegisterSchema)
+        resolver: zodResolver(RegisterFormSchema)
     });
 
     function onValid(data: RegisterFormData) {
