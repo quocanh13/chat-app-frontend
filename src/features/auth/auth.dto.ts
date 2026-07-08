@@ -26,7 +26,5 @@ export const LoginFormSchema = z.object({
 })
 
 export const LoginDataSchema = z.object({
-    id: z.int().positive(),
-    username: z.string(),
     token: z.string()
 })

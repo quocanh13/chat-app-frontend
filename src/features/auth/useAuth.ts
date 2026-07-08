@@ -9,7 +9,7 @@ import { handleApiError } from "../../lib/api";
 export function useAuth(){
     const navigate = useNavigate()
     const { addToast } = useToastStore()
-    const { setAuth } = useAuthStore()
+    const { setToken } = useAuthStore()
     const registerMutation = useMutation({
         mutationFn : AuthApi.register,
         onSuccess(data){
@@ -29,7 +29,7 @@ export function useAuth(){
                 type : TOAST_TYPE.SUCCESS, 
                 message : "Login successfully. Redirecting to the chat page"
             })
-            setAuth(data)
+            setToken(data.token)
         },
         onError : handleApiError
     })

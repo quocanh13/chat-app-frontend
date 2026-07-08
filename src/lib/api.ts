@@ -7,12 +7,11 @@ export function request(
     url: string,
     options: RequestInit = {}
 ){
-    const { auth } = useAuthStore.getState()
+    const { token } = useAuthStore.getState()
     options.credentials = "include"
     const headers = new Headers(options.headers)
-    if (auth?.token) {
-        headers.set("Authorization", `Bearer ${auth.token}`);
-    }
+    headers.set("Authorization", `Bearer ${token}`);
+    
     return fetch(url, {...options, headers})
 }
 
