@@ -1,11 +1,15 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import * as GroupApi from "./group.api"
 import { useEffect } from "react"
 import { ApiError} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
 
+interface UseGroupInput{
+    groupId: number
+}
 
-export function useGroup(){
+export function useGroupList(){
+    const queryClient = useQueryClient();
     const { handleApiError } = useApiErrorHandler()
 
     const currentUserGroupListQuery = useQuery({
@@ -20,5 +24,23 @@ export function useGroup(){
         handleApiError(error)
     }, [currentUserGroupListQuery.isError])
 
+    useEffect(()=>{
+        if(!currentUserGroupListQuery.data)
+            return
+        const groups = currentUserGroupListQuery.data.groups
+        groups.forEach((group) => {
+            queryClient.setQueryData(["group", group.id], group);
+        });
+    }, [currentUserGroupListQuery.data])
+
     return {currentUserGroupListQuery}
+}
+
+export function useGroup(input: UseGroupInput){
+    const groupQuery = useQuery({
+        queryKey: ["group", input.groupId],
+        queryFn: () => { return GroupApi.getGroupById(input) }
+    })
+
+    return {groupQuery, group: groupQuery.data}
 }
