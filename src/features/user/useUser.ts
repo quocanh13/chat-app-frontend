@@ -13,21 +13,12 @@ export function useUser(){
         queryFn: UserApi.getMe
     })
 
-    const currentUserGroupListQuery = useQuery({
-        queryKey: ["group-list", "me"],
-        queryFn: UserApi.getMyGroupList
-    })
-
     useEffect(()=>{
         if(!currentUserQuery.isError)
             return
         const error = currentUserQuery.error as ApiError
         handleApiError(error)
     }, [currentUserQuery.isError])
-
-    useEffect(()=>{
-
-    })
 
     return {currentUserQuery}
 }
