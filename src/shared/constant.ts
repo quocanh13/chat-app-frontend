@@ -8,9 +8,11 @@ export const API_ENDPOINTS = {
     USER: {
         GET_ME : API_BASE_URL + `/users/me`,
         GET_MY_GROUP_LIST : API_BASE_URL + `/users/me/groups`,
-        GET_USER_BY_ID(userId: number) { return API_BASE_URL + `/users/${userId}`},
-        GET_GROUP_LIST(userId: number) { return API_BASE_URL + `/users/${userId}/groups`},
-        PUT_USER_BY_ID(userId: number) { return API_BASE_URL + `users/${userId}`}
+        GET_USER_BY_ID(userId: number) { return API_BASE_URL + `/users/${userId}` },
+        PUT_USER_BY_ID(userId: number) { return API_BASE_URL + `users/${userId}` }
+    },
+    GROUP: {
+        GET_GROUP_BY_ID(groupId: number) { return API_BASE_URL + `/groups/${groupId}` }
     }
 };
 
