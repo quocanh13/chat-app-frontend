@@ -14,6 +14,6 @@ const GroupSchema = z.object({
     avatarFileId: z.int().positive().nullable()
 });
 
-export const GetGroupListSchema = z.object({
+export const GetMyGroupListSchema = z.object({
     groups: z.array(GroupSchema)
 })
