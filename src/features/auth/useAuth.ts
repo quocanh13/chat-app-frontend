@@ -4,12 +4,13 @@ import * as AuthApi from "./auth.api"
 import { TOAST_TYPE } from "../../shared/types";
 import { useToastStore } from "../../stores/toastStore";
 import { useAuthStore } from "../../stores/authStore";
-import { handleApiError } from "../../lib/api";
+import { useApiErrorHandler } from "../../lib/api";
 
 export function useAuth(){
     const navigate = useNavigate()
     const { addToast } = useToastStore()
     const { setToken } = useAuthStore()
+    const { handleApiError } = useApiErrorHandler()
     const registerMutation = useMutation({
         mutationFn : AuthApi.register,
         onSuccess(data){

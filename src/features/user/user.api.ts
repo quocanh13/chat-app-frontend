@@ -7,9 +7,6 @@ import { GetMyGroupListSchema, GetUserDataSchema } from "./user.dto";
 interface GetUserByIdInput{
     userId: number
 }
-interface GetMyGroupListInput{
-    userId: number
-}
 
 type GetUserByIdData = z.infer<typeof GetUserDataSchema>
 type GetMyGroupListData = z.infer<typeof GetMyGroupListSchema>
@@ -45,11 +42,11 @@ export async function getMe() : Promise<GetUserByIdData> {
     return dto.data
 }
 
-export async function getMyGroupList(input: GetMyGroupListInput) : Promise<GetMyGroupListData> {
+export async function getMyGroupList() : Promise<GetMyGroupListData> {
     const options: RequestInit = {
         method: "GET"
     }
-    const response = await request(API_ENDPOINTS.USER.GET_GROUP_LIST(input.userId), options);
+    const response = await request(API_ENDPOINTS.USER.GET_MY_GROUP_LIST, options);
     const result = await response.json()
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
