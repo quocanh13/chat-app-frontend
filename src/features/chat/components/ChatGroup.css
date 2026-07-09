@@ -1,0 +1,211 @@
+/* ChatGroup.css */
+.chat-group-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+/* Header */
+.chat-group-header {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #050505;
+}
+
+.header-subtitle {
+    font-size: 13px;
+    color: #65676b;
+    margin: 0;
+}
+
+/* Nút thông tin nhóm ở góc phải header */
+.header-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: transparent;
+}
+
+.header-btn:hover {
+    background-color: #f0f2f5;
+}
+
+.header-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* Message List */
+.message-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Message Item */
+.message-item-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    max-width: 65%;
+}
+
+.message-item-wrapper.received {
+    align-self: flex-start;
+}
+
+.message-item-wrapper.sent {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message-user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.message-item-wrapper.sent .message-user-avatar {
+    display: none; 
+}
+
+.message-content-box {
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 15px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.received .message-content-box {
+    background-color: #f0f2f5;
+    color: #050505;
+}
+
+.sent .message-content-box {
+    background-color: #0084ff;
+    color: #ffffff;
+}
+
+.message-content-box p {
+    margin: 0;
+}
+
+/* Message Input */
+.message-input-container {
+    padding: 16px 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #f0f2f5;
+}
+
+.message-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* KHẮC PHỤC CHÍNH: Tạo nút bấm tròn rỗng bọc ngoài hành động */
+.input-action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%; /* Ép bo tròn nút bấm ngoài */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: transparent;
+    flex-shrink: 0;
+}
+
+.input-action-btn:hover {
+    background-color: #f0f2f5;
+}
+
+/* Icon gốc bên trong được bảo toàn 100% hình khối */
+.input-action-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain; 
+}
+
+/* Cấu hình để ẩn input file đè lên nút bấm */
+.file-input-wrapper {
+    position: relative;
+}
+
+.file-input-wrapper input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+}
+
+.text-input-field {
+    flex: 1;
+    height: 40px;
+    background-color: #f0f2f5;
+    border: none;
+    border-radius: 20px;
+    padding: 0 16px;
+    font-size: 15px;
+    outline: none;
+    color: #050505;
+}
+
+.text-input-field::placeholder {
+    color: #65676b;
+}
+
+/* Reset style mặc định cho thẻ button gửi */
+.send-btn {
+    border: none;
+    background: none;
+    padding: 0;
+}
