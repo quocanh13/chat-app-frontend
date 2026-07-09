@@ -5,7 +5,7 @@ import { ApiError} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
 
 
-export function useUser(){
+export function useCurrentUser(){
     const { handleApiError } = useApiErrorHandler()
 
     const currentUserQuery = useQuery({
@@ -20,5 +20,25 @@ export function useUser(){
         handleApiError(error)
     }, [currentUserQuery.isError])
 
-    return {currentUserQuery}
+    return {currentUserQuery, currentUser: currentUserQuery.data}
+}
+
+export function useUser(userId: number){
+    const { handleApiError } = useApiErrorHandler()
+    
+    const userQuery = useQuery({
+        queryKey: ["user", userId],
+        queryFn(){
+            return UserApi.getUserById({userId})
+        }
+    })
+
+    useEffect(()=>{
+        if(!userQuery.isError)
+            return
+        const error = userQuery.error as ApiError
+        handleApiError(error)
+    }, [userQuery.isError])
+
+    return {userQuery, user: userQuery.data}
 }
