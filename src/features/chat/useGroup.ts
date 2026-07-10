@@ -36,10 +36,11 @@ export function useGroupList(){
     return {currentUserGroupListQuery, groupList : currentUserGroupListQuery.data?.groups}
 }
 
-export function useGroup(groupId: number){
+export function useGroup(groupId: number | null | undefined){
     const groupQuery = useQuery({
         queryKey: ["group", groupId],
-        queryFn: () => { return GroupApi.getGroupById({groupId}) }
+        queryFn: () => { return GroupApi.getGroupById({groupId: groupId!}) },
+        enabled: !groupId
     })
 
     return {groupQuery, group: groupQuery.data}
