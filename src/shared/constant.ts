@@ -1,5 +1,11 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
+interface GetMessageByGroupIdInput{
+    groupId: number,
+    offset: number,
+    limit: number
+}
+
 export const API_ENDPOINTS = {
     AUTH: {
         LOGIN: API_BASE_URL + '/auth/login',
@@ -12,7 +18,14 @@ export const API_ENDPOINTS = {
         PUT_USER_BY_ID(userId: number) { return API_BASE_URL + `users/${userId}` }
     },
     GROUP: {
-        GET_GROUP_BY_ID(groupId: number) { return API_BASE_URL + `/groups/${groupId}` }
+        GET_GROUP_BY_ID(groupId: number) { return API_BASE_URL + `/groups/${groupId}` },
+        CREATE_GROUP: API_BASE_URL + "/groups"
+    },
+    MESSAGE: {
+        GET_MESSAGE_BY_GROUP_ID(input: GetMessageByGroupIdInput) { 
+            return API_BASE_URL + `/groups/${input.groupId}/messages?offset=${input.offset}&limit=${input.limit}` 
+        },
+        POST_MESSAGE(groupId: number) { return API_BASE_URL + `/groups/${groupId}/messages` }
     }
 };
 
