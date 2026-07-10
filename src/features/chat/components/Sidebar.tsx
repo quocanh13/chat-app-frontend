@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import "./Sidebar.css";
 import createRoomIcon from "../../../assets/create-room-icon.png";
 import userInformationIcon from "../../../assets/user-information-icon.png";
@@ -36,7 +36,7 @@ interface SidebarHeaderProps {
 
 function SidebarHeader({ onOpenUser, onOpenCreateGroup }: SidebarHeaderProps){
     return <div className="sidebar-header">
-        <h4>Chat Group</h4>
+        <h4>Chat App</h4>
         <div className="sidebar-header-actions">
             <div className="sidebar-header-btn" onClick={onOpenUser} title="Thông tin cá nhân">
                 <img className="sidebar-header-icon" src={userInformationIcon} alt="User Info" />
@@ -108,12 +108,17 @@ function CreateGroupModal({ onClose }: { onClose: () => void }){
 }
 
 function GroupSearch(){
+    const { setSearchTerm } = useGroupStore()
+    function onChange(e: ChangeEvent<HTMLInputElement>){
+        setSearchTerm(e.target.value)
+    }
     return <div className="sidebar-search-container">
         <div className="sidebar-search-wrapper">
             <input 
                 className="sidebar-search-input" 
                 type="text" 
                 placeholder="Nhập tên group để tìm kiếm" 
+                onChange={onChange}
             />
         </div>
     </div>
@@ -121,8 +126,12 @@ function GroupSearch(){
 
 function GroupList(){
     const { groupList } = useGroupList()
+    const { searchTerm } = useGroupStore()
     return <div className="group-list">
-        {groupList?.map(group => <GroupItem groupId={group.id} key={group.id} />)}
+        {groupList?.map(group => {
+            if(group.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                return <GroupItem groupId={group.id} key={group.id} />
+        })}
     </div>
 }
 
