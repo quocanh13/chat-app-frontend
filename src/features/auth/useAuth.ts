@@ -31,6 +31,7 @@ export function useAuth(){
                 message : "Login successfully. Redirecting to the chat page"
             })
             setToken(data.token)
+            navigate("/chat")
         },
         onError : handleApiError
     })
