@@ -4,6 +4,8 @@ import groupInfomationIcon from "../../../assets/group-information-icon.png"
 import defaultUserAvatar from "../../../assets/default-user-avatar.png"
 import attachFileIcon from "../../../assets/attach-file-icon.png"
 import sendMessageIcon from "../../../assets/send-message-icon.png"
+import { useGroupStore } from "../../../stores/groupStore";
+import { useGroup } from "../useGroup";
 
 export function ChatGroup(){
     return <div className="chat-group-container">
@@ -14,12 +16,19 @@ export function ChatGroup(){
 }
 
 export function ChatGroupHeader(){
+    const {currentGroupId} = useGroupStore()
+    const {group} = useGroup(currentGroupId)
+
+    const groupName = group?.name ?? ""
+    const groupAvatar = group?.avatarFileId ? `/files/${group.avatarFileId}/view` : defaultGroupAvatar
+    const numMember = group?.members.length ? `${group.members.length} thành viên` : ``
+
     return <div className="chat-group-header">
         <div className="header-left">
-            <img className="header-avatar" src={defaultGroupAvatar} alt="Default Group Avatar" />
+            <img className="header-avatar" src={groupAvatar} alt="Default Group Avatar" />
             <div className="header-info">
-                <p className="header-title">Test Group</p>
-                <p className="header-subtitle">10 thành viên</p>
+                <p className="header-title">{groupName}</p>
+                <p className="header-subtitle">{numMember}</p>
             </div>
         </div>
         {/* Sửa đồng bộ nút thông tin nhóm ở Header */}
