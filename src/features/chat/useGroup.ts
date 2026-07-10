@@ -3,14 +3,12 @@ import * as GroupApi from "./group.api"
 import { useEffect } from "react"
 import { ApiError} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
-
-interface UseGroupInput{
-    groupId: number
-}
+import { useGroupStore } from "../../stores/groupStore"
 
 export function useGroupList(){
     const queryClient = useQueryClient();
     const { handleApiError } = useApiErrorHandler()
+    const { setCurrentGroupId, currentGroupId } = useGroupStore()
 
     const currentUserGroupListQuery = useQuery({
         queryKey: ["group-list", "me"],
@@ -31,15 +29,17 @@ export function useGroupList(){
         groups.forEach((group) => {
             queryClient.setQueryData(["group", group.id], group);
         });
+        if(!currentGroupId && groups.length > 0)
+            setCurrentGroupId(groups[0].id)
     }, [currentUserGroupListQuery.data])
 
-    return {currentUserGroupListQuery}
+    return {currentUserGroupListQuery, groupList : currentUserGroupListQuery.data?.groups}
 }
 
-export function useGroup(input: UseGroupInput){
+export function useGroup(groupId: number){
     const groupQuery = useQuery({
-        queryKey: ["group", input.groupId],
-        queryFn: () => { return GroupApi.getGroupById(input) }
+        queryKey: ["group", groupId],
+        queryFn: () => { return GroupApi.getGroupById({groupId}) }
     })
 
     return {groupQuery, group: groupQuery.data}
