@@ -1,10 +1,12 @@
 import {z} from "zod"
+import { MessageSchema } from "./message.dto";
 
-const GroupSchema = z.object({
+export const GroupSchema = z.object({
     id: z.int().positive(),
     name: z.string(),
-    lastMessageId: z.int().positive().nullable(),
-    avatarFileId: z.int().positive().nullable()
+    lastMessage: MessageSchema.nullable(),
+    avatarFileId: z.int().positive().nullable(),
+    hostId: z.int().positive()
 });
 
 export const GetMyGroupListSchema = z.object({

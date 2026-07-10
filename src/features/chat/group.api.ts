@@ -2,10 +2,13 @@ import {z} from "zod"
 import { request } from "../../lib/api";
 import { API_ENDPOINTS } from "../../shared/constant";
 import { ApiError } from "../../shared/types";
-import { GetMyGroupListSchema } from "./group.dto";
+import { GetMyGroupListSchema, GroupSchema } from "./group.dto";
 
-interface getGroupByIdInput{
+interface GetGroupByIdInput{
     groupId: number
+}
+interface CreateGroupInput{
+    name: string
 }
 
 type GetMyGroupListData = z.infer<typeof GetMyGroupListSchema>
@@ -19,13 +22,15 @@ export async function getMyGroupList() : Promise<GetMyGroupListData> {
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
     const dto = GetMyGroupListSchema.safeParse(result)
-    if(!dto.success)
+    if(!dto.success){
+        console.log(dto.error.flatten())
         throw new ApiError()
+    }
 
     return dto.data
 }
 
-export async function getGroupById(input: getGroupByIdInput) {
+export async function getGroupById(input: GetGroupByIdInput) {
     const options: RequestInit = {
         method: "GET"
     }
@@ -33,9 +38,29 @@ export async function getGroupById(input: getGroupByIdInput) {
     const result = await response.json()
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
-    const dto = GetMyGroupListSchema.safeParse(result)
+    const dto = GroupSchema.safeParse(result)
     if(!dto.success)
         throw new ApiError()
 
     return dto.data
+}
+
+export async function createGroup(input: CreateGroupInput) {
+    const options: RequestInit = {
+        method: "POST",
+        body : JSON.stringify({name: input.name}),
+        headers : {
+            "content-type" : "application/json"
+        }
+    }
+    const response = await request(API_ENDPOINTS.GROUP.CREATE_GROUP, options);
+    const result = await response.json()
+    console.log(result)
+    if(!response.ok)
+        throw new ApiError(result.message!, result.error, result.detail)
+    const dto = GetMyGroupListSchema.safeParse(result)
+    if(!dto.success)
+        throw new ApiError()
+
+    return dto.data 
 }
