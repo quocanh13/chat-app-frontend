@@ -40,7 +40,7 @@ export function useGroup(groupId: number | null | undefined){
     const groupQuery = useQuery({
         queryKey: ["group", groupId],
         queryFn: () => { return GroupApi.getGroupById({groupId: groupId!}) },
-        enabled: !groupId
+        enabled: !!groupId
     })
 
     return {groupQuery, group: groupQuery.data}
