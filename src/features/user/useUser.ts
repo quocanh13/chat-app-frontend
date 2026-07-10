@@ -10,7 +10,8 @@ export function useCurrentUser(){
 
     const currentUserQuery = useQuery({
         queryKey: ["user", "me"],
-        queryFn: UserApi.getMe
+        queryFn: UserApi.getMe,
+        staleTime: Infinity
     })
 
     useEffect(()=>{
@@ -23,14 +24,15 @@ export function useCurrentUser(){
     return {currentUserQuery, currentUser: currentUserQuery.data}
 }
 
-export function useUser(userId: number){
+export function useUser(userId: number | undefined){
     const { handleApiError } = useApiErrorHandler()
     
     const userQuery = useQuery({
         queryKey: ["user", userId],
         queryFn(){
-            return UserApi.getUserById({userId})
-        }
+            return UserApi.getUserById({userId: userId!})
+        },
+        enabled: userId !== undefined
     })
 
     useEffect(()=>{

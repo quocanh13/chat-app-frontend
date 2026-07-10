@@ -32,7 +32,6 @@ export async function getMe() : Promise<GetUserByIdData> {
     }
     const response = await request(API_ENDPOINTS.USER.GET_ME, options);
     const result = await response.json()
-    console.log(result)
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
     const dto = GetUserDataSchema.safeParse(result)
