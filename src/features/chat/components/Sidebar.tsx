@@ -4,6 +4,10 @@ import createRoomIcon from "../../../assets/create-room-icon.png";
 import userInformationIcon from "../../../assets/user-information-icon.png";
 import defaultGroupAvatar from "../../../assets/default-group-avatar.png";
 import defaultUserAvatar from "../../../assets/default-user-avatar.png"; 
+import { useCurrentUser, useUser } from "../../user/useUser";
+import { useGroup, useGroupList } from "../useGroup";
+import { useGroupStore } from "../../../stores/groupStore";
+import { timeDiff } from "../../../utils/time";
 
 export function Sidebar(){
     const [showUserInfo, setShowUserInfo] = useState(false);
@@ -46,11 +50,8 @@ function SidebarHeader({ onOpenUser, onOpenCreateGroup }: SidebarHeaderProps){
 
 // Hộp thoại Thông tin User giữa màn hình
 function UserInfoModal({ onClose }: { onClose: () => void }){
-    const user = {
-        name: "Nguyễn Quốc Anh",
-        username: "quocanh.dev",
-        avatar: defaultUserAvatar
-    };
+    const {currentUser} = useCurrentUser()
+    const avatarUrl = currentUser?.avatarFileId ? `/file/${currentUser.avatarFileId}/view` : defaultUserAvatar
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -61,9 +62,9 @@ function UserInfoModal({ onClose }: { onClose: () => void }){
                     <button className="modal-close-btn" onClick={onClose}>×</button>
                 </div>
                 <div className="modal-body user-info-content">
-                    <img className="user-info-avatar" src={user.avatar} alt="User Avatar" />
-                    <h6 className="user-info-name">{user.name}</h6>
-                    <p className="user-info-username">@{user.username}</p>
+                    <img className="user-info-avatar" src={avatarUrl} alt="User Avatar" />
+                    <h6 className="user-info-name">{currentUser?.name}</h6>
+                    <p className="user-info-username">@{currentUser?.username}</p>
                 </div>
             </div>
         </div>
@@ -119,32 +120,45 @@ function GroupSearch(){
 }
 
 function GroupList(){
-    const groupList = [1, 2, 3, 4, 5, 6]
+    const { groupList } = useGroupList()
     return <div className="group-list">
-        {groupList.map(groupId => <GroupItem groupId={groupId} key={groupId} />)}
+        {groupList?.map(group => <GroupItem groupId={group.id} key={group.id} />)}
     </div>
 }
 
 function GroupItem({groupId} : {groupId: number}){
-    const group = {
-        name: "Test Group",
-        avatar: defaultGroupAvatar
-    };
-    
-    const lastMessage = {
-        content: "Test group last message",
-        sentAt: new Date(),
-        name: "Nguyễn Quốc Anh"
+    const {group} = useGroup(groupId)
+    const userId = group?.hostId ?? group?.lastMessage?.userId
+    const {user} = useUser(userId)
+    const { currentGroupId, setCurrentGroupId } = useGroupStore()
+    if(!group || !user)
+        return
+
+    const isSelected = currentGroupId == groupId
+    const avatarUrl = group.avatarFileId ? `file/${group.avatarFileId}/view` : defaultGroupAvatar
+
+    function onClick(){
+        setCurrentGroupId(groupId)
+    }
+
+    const lastMessage = group.lastMessage ?? {
+        content: "Nhóm mới được tạo",
+        sentAt: null,
     };
 
-    return <div className="group-item">
-        <img className="group-avatar" src={group.avatar} alt="Default Group Avatar" />
-        <div className="group-info">
-            <p className="group-name">{group.name}</p>
-            <div className="group-last-message-row">
-                <p className="group-last-message-content"><span>{lastMessage.name}:</span> {lastMessage.content}</p>
-                <p className="group-last-message-time">· {lastMessage.sentAt.getDay()}d</p>
+    const time = lastMessage.sentAt ? `· ${timeDiff(lastMessage.sentAt)}` : ""
+
+    // Thêm class 'selected' nếu isSelected là true
+    return (
+        <div className={`group-item ${isSelected ? "selected" : ""}`} onClick={onClick}>
+            <img className="group-avatar" src={avatarUrl} alt="Default Group Avatar" />
+            <div className="group-info">
+                <p className="group-name">{group.name}</p>
+                <div className="group-last-message-row">
+                    <p className="group-last-message-content"><span>{user.name}:</span> {lastMessage.content}</p>
+                    <p className="group-last-message-time">{time}</p>
+                </div>
             </div>
         </div>
-    </div>
+    );
 }

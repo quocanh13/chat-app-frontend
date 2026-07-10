@@ -105,6 +105,25 @@
     margin-bottom: 4px;
 }
 
+/* Style khi group được chọn (isSelected) */
+.group-item.selected {
+    background-color: #e7f3ff; /* Nền xanh nhạt chuẩn phong cách Messenger */
+}
+
+/* Tùy chọn: Đổi màu chữ tên nhóm và tin nhắn cuối khi được chọn để nổi bật hơn */
+.group-item.selected .group-name {
+    color: #0084ff; /* Tên nhóm chuyển sang màu xanh dương */
+}
+
+.group-item.selected .group-last-message-row {
+    color: #1877f2; /* Tin nhắn cuối đổi màu xanh nhẹ hơn một chút */
+}
+
+/* Giữ nguyên hiệu ứng hover nhẹ khi đang chọn */
+.group-item.selected:hover {
+    background-color: #dbeeff; 
+}
+
 .group-item:hover {
     background-color: #f2f2f2;
 }
