@@ -1,28 +1,76 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as MessageApi from "./message.api"
-import { useEffect, useRef, useState } from "react";
-import z from "zod";
-import type { MessageSchema } from "./message.dto";
+import * as FileApi from "../file/file.api"
+import { useState } from "react";
+import { useChatStore } from "../../stores/chatStore";
+import { TOAST_TYPE, type ApiError } from "../../shared/types";
+import { useApiErrorHandler } from "../../lib/api";
 
-type Message = z.infer<typeof MessageSchema>
+interface SendMessageInput{
+    groupId: number,
+    file?: File,
+    content: string
+}
 
-export function useMessage(groupId: number){
-    const offsetRef = useRef(0)
-    const [messages, setMessages] = useState<Message[]>([])
+export function useCurrentGroupMessage(){
+    const { addMessageStack, currentGroupId, getMessageStack, currentGroupMessages } = useChatStore()
+    const { handleApiError } = useApiErrorHandler()
+    const [isLoading, setIsLoading] = useState(false)
+    const queryClient = useQueryClient();
 
-    const messageQuery = useQuery({
-        queryKey: ["message", groupId],
-        queryFn(): Promise<Message[]> {
-            return MessageApi.getMessage({ groupId, offset: offsetRef.current, limit: 20})
+    const getMoreMessage = async () => {
+        try{
+            setIsLoading(true)
+            const messages = await queryClient.fetchQuery({
+                queryKey: ["message", currentGroupId],
+                queryFn: () => {
+                    const current = getMessageStack(currentGroupId!) ?? [];
+
+                    return MessageApi.getMessage({
+                        groupId: currentGroupId!,
+                        offset: current.length,
+                        limit: 20,
+                    });
+                },
+            });
+
+            addMessageStack({
+                groupId: currentGroupId!,
+                messages,
+                newGroup: true,
+            });
+        } catch(e) {
+            const error = e as ApiError
+            console.log(error)
+            handleApiError(error)
+        } finally {
+            setIsLoading(false)
         }
+    };
+
+    return {currentGroupMessages, getMoreMessage, isLoading}
+}
+
+export function useMessage(){
+    const { currentGroupId } = useChatStore()
+    const { handleApiError } = useApiErrorHandler()
+
+    const sendMessageMutation = useMutation({
+        mutationKey: ["send-message", currentGroupId],
+        async mutationFn(input: SendMessageInput){
+            let fileId : number | null = null
+            if(input.file){
+                const sendFileResutl = await FileApi.sendFile({file: input.file, type: "MESSAGE"})
+                fileId = sendFileResutl.id
+            }
+
+            return MessageApi.sendMessage({...input, fileId})
+        },
+        onSuccess(data){
+            console.log("Send message successfully")
+        },
+        onError : handleApiError
     })
 
-    useEffect(()=>{
-        if(!messageQuery.data)
-            return
-        offsetRef.current += messageQuery.data.length
-        setMessages(prev => ([...prev, ...messageQuery.data]))
-    }, [messageQuery.data])
-
-    return {messages, offsetRef, getMoreMessage: messageQuery.refetch}
+    return {sendMessageMutation}
 }
