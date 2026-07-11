@@ -1,8 +1,7 @@
-import {z} from "zod"
 import { request } from "../../lib/api";
 import { API_ENDPOINTS } from "../../shared/constant";
 import { ApiError } from "../../shared/types";
-import { GetMyGroupListSchema, GroupSchema } from "./group.dto";
+import {  GetMyGroupListSchema, GroupSchema, type GetMyGroupListData } from "./group.dto";
 
 interface GetGroupByIdInput{
     groupId: number
@@ -10,8 +9,6 @@ interface GetGroupByIdInput{
 interface CreateGroupInput{
     name: string
 }
-
-type GetMyGroupListData = z.infer<typeof GetMyGroupListSchema>
 
 export async function getMyGroupList() : Promise<GetMyGroupListData> {
     const options: RequestInit = {
@@ -29,7 +26,6 @@ export async function getMyGroupList() : Promise<GetMyGroupListData> {
 
     return dto.data
 }
-
 export async function getGroupById(input: GetGroupByIdInput) {
     const options: RequestInit = {
         method: "GET"
@@ -44,7 +40,6 @@ export async function getGroupById(input: GetGroupByIdInput) {
 
     return dto.data
 }
-
 export async function createGroup(input: CreateGroupInput) {
     const options: RequestInit = {
         method: "POST",
@@ -58,9 +53,8 @@ export async function createGroup(input: CreateGroupInput) {
     console.log(result)
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
-    const dto = GetMyGroupListSchema.safeParse(result)
+    const dto = GroupSchema.safeParse(result)
     if(!dto.success)
         throw new ApiError()
-
     return dto.data 
 }
