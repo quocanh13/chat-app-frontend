@@ -26,6 +26,12 @@ export const API_ENDPOINTS = {
             return API_BASE_URL + `/groups/${input.groupId}/messages?offset=${input.offset}&limit=${input.limit}` 
         },
         POST_MESSAGE(groupId: number) { return API_BASE_URL + `/groups/${groupId}/messages` }
+    },
+    FILE: {
+        POST_FILE: API_BASE_URL + `/files`,
+        GET_FILE(id: number) { return API_BASE_URL + `/files/${id}` },
+        VIEW_FILE(id: number) { return API_BASE_URL + `/files/${id}/view` },
+        DOWNLOAD_FILE(id: number) { return API_BASE_URL + `/files/${id}/download` },
     }
 };
 
