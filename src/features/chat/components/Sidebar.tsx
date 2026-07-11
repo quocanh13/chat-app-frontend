@@ -1,13 +1,20 @@
-import { useState, type ChangeEvent } from "react";
+import React, { useState, type ChangeEvent } from "react";
 import "./Sidebar.css";
 import createRoomIcon from "../../../assets/create-room-icon.png";
 import userInformationIcon from "../../../assets/user-information-icon.png";
 import defaultGroupAvatar from "../../../assets/default-group-avatar.png";
 import defaultUserAvatar from "../../../assets/default-user-avatar.png"; 
 import { useCurrentUser, useUser } from "../../user/useUser";
-import { useGroup, useGroupList } from "../useGroup";
+import { useGroup, useGroupList, useGroupMutation } from "../useGroup";
 import { useChatStore } from "../../../stores/chatStore";
 import { timeDiff } from "../../../utils/time";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type z from "zod";
+import { CreateGroupFormSchema } from "../group.dto";
+import { useForm } from "react-hook-form";
+import { onInvalid } from "../../../lib/form";
+
+type CreateMessageFormData = z.infer<typeof CreateGroupFormSchema>
 
 export function Sidebar(){
     const [showUserInfo, setShowUserInfo] = useState(false);
@@ -73,11 +80,16 @@ function UserInfoModal({ onClose }: { onClose: () => void }){
 
 // Hộp thoại Tạo Nhóm giữa màn hình
 function CreateGroupModal({ onClose }: { onClose: () => void }){
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        alert("Đã tạo nhóm thành công!"); 
-        onClose();
-    };
+    const { createGroup, isPending } = useGroupMutation()
+
+    const { register, handleSubmit } = useForm<CreateMessageFormData>({
+        resolver: zodResolver(CreateGroupFormSchema)
+    });
+
+    function onValid(data: CreateMessageFormData) {
+        createGroup(data);
+        onClose()
+    }
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -87,7 +99,7 @@ function CreateGroupModal({ onClose }: { onClose: () => void }){
                     <button className="modal-close-btn" onClick={onClose}>×</button>
                 </div>
                 <div className="modal-body">
-                    <form className="create-group-form" onSubmit={handleSubmit}>
+                    <form className="create-group-form" onSubmit={handleSubmit(onValid, onInvalid)}>
                         <div className="form-group">
                             <label htmlFor="groupName">Tên nhóm</label>
                             <input 
@@ -97,9 +109,12 @@ function CreateGroupModal({ onClose }: { onClose: () => void }){
                                 className="form-input"
                                 required
                                 autoFocus
+                                {...register("name")}
                             />
                         </div>
-                        <button type="submit" className="form-submit-btn">Tạo nhóm</button>
+                        <button type="submit" className="form-submit-btn" disabled={isPending}>
+                            {isPending ? "Đang tạo..." : "Tạo nhóm"}
+                        </button>
                     </form>
                 </div>
             </div>
