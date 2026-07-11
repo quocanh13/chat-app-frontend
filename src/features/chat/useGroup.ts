@@ -3,12 +3,12 @@ import * as GroupApi from "./group.api"
 import { useEffect } from "react"
 import { ApiError} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
-import { useGroupStore } from "../../stores/groupStore"
+import { useChatStore } from "../../stores/chatStore"
 
 export function useGroupList(){
     const queryClient = useQueryClient();
     const { handleApiError } = useApiErrorHandler()
-    const { setCurrentGroupId, currentGroupId } = useGroupStore()
+    const { setCurrentGroupId, currentGroupId } = useChatStore()
 
     const currentUserGroupListQuery = useQuery({
         queryKey: ["group-list", "me"],
