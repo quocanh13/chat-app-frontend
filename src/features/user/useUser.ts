@@ -3,10 +3,12 @@ import * as UserApi from "./user.api"
 import { useEffect } from "react"
 import { ApiError} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
+import { useAuthStore } from "../../stores/authStore"
 
 
 export function useCurrentUser(){
     const { handleApiError } = useApiErrorHandler()
+    const { token } = useAuthStore()
 
     const currentUserQuery = useQuery({
         queryKey: ["user", "me"],
@@ -20,6 +22,10 @@ export function useCurrentUser(){
         const error = currentUserQuery.error as ApiError
         handleApiError(error)
     }, [currentUserQuery.isError])
+
+    useEffect(()=>{
+        currentUserQuery.refetch()
+    }, [token])
 
     return {currentUserQuery, currentUser: currentUserQuery.data}
 }
