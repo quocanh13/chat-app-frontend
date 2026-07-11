@@ -3,7 +3,7 @@ import { useGroup } from "../useGroup";
 import { type Message } from "../message.dto";
 import { useCurrentUser, useUser } from "../../user/useUser";
 import { useCurrentGroupMessage, useMessage } from "../useMessage";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useToastStore } from "../../../stores/toastStore";
 import { TOAST_TYPE } from "../../../shared/types";
 import { Loader } from "../../../shared/loader/Loader";
@@ -50,11 +50,28 @@ export function ChatGroupHeader(){
 function MessageList(){
     const { currentGroupId, currentGroupMessages } = useChatStore()
     const { getMoreMessage, isLoading } = useCurrentGroupMessage()
+    const containerRef = useRef<HTMLDivElement>(null)
+    const scollHeightRef = useRef(0)
+    
+    function onScroll(e: React.UIEvent){
+        if(e.currentTarget.scrollTop == 0 && currentGroupMessages){
+            scollHeightRef.current = containerRef.current?.scrollHeight ?? 0
+            getMoreMessage()
+        }
+    }
+
     useEffect(() => {
         if ( currentGroupId && !isLoading && !currentGroupMessages)
             getMoreMessage();
     }, [currentGroupId, currentGroupMessages, isLoading]);
-    return <div className="message-list">
+
+    useEffect(()=>{
+        if(!containerRef.current)
+            return
+        containerRef.current.scrollTop = containerRef.current.scrollHeight - scollHeightRef.current
+    }, [currentGroupMessages])
+
+    return <div className="message-list" onScroll={onScroll} ref={containerRef}>
         {isLoading && (
             <div className="message-list-loader-container">
                 <Loader />

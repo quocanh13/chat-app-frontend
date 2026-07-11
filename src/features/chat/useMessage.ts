@@ -36,8 +36,8 @@ export function useCurrentGroupMessage(){
 
             addMessageStack({
                 groupId: currentGroupId!,
-                messages,
-                newGroup: true,
+                messages: messages.reverse(),
+                newGroup: true
             });
         } catch(e) {
             const error = e as ApiError
