@@ -28,7 +28,13 @@ export function useGroupList(){
     useEffect(()=>{
         if(!currentUserGroupListQuery.data)
             return
-        const groups = currentUserGroupListQuery.data.groups
+        const groups = [...currentUserGroupListQuery.data.groups].sort((a, b) => {
+            const timeA = a.lastMessage?.sentAt ?? a.createdAt;
+            const timeB = b.lastMessage?.sentAt ?? b.createdAt;
+
+            return  timeB.getTime() - timeA.getTime();
+        });
+        queryClient.setQueryData(["group-list", "me"], {groups})
         groups.forEach((group) => {
             queryClient.setQueryData(["group", group.id], group);
         });
