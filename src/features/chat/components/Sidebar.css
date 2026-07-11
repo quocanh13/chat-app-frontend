@@ -190,7 +190,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999; /* Đảm bảo nổi hẳn lên trên cùng màn hình web */
+    z-index: 100; /* Đảm bảo nổi hẳn lên trên cùng màn hình web */
     animation: fadeIn 0.2s ease-out;
 }
 
