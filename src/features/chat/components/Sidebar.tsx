@@ -6,7 +6,7 @@ import defaultGroupAvatar from "../../../assets/default-group-avatar.png";
 import defaultUserAvatar from "../../../assets/default-user-avatar.png"; 
 import { useCurrentUser, useUser } from "../../user/useUser";
 import { useGroup, useGroupList } from "../useGroup";
-import { useGroupStore } from "../../../stores/groupStore";
+import { useChatStore } from "../../../stores/chatStore";
 import { timeDiff } from "../../../utils/time";
 
 export function Sidebar(){
@@ -108,7 +108,7 @@ function CreateGroupModal({ onClose }: { onClose: () => void }){
 }
 
 function GroupSearch(){
-    const { setSearchTerm } = useGroupStore()
+    const { setSearchTerm } = useChatStore()
     function onChange(e: ChangeEvent<HTMLInputElement>){
         setSearchTerm(e.target.value)
     }
@@ -126,7 +126,7 @@ function GroupSearch(){
 
 function GroupList(){
     const { groupList } = useGroupList()
-    const { searchTerm } = useGroupStore()
+    const { searchTerm } = useChatStore()
     return <div className="group-list">
         {groupList?.map(group => {
             if(group.name.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -139,7 +139,7 @@ function GroupItem({groupId} : {groupId: number}){
     const {group} = useGroup(groupId)
     const userId = group?.hostId ?? group?.lastMessage?.userId
     const {user} = useUser(userId)
-    const { currentGroupId, setCurrentGroupId } = useGroupStore()
+    const { currentGroupId, setCurrentGroupId } = useChatStore()
     if(!group || !user)
         return
 
