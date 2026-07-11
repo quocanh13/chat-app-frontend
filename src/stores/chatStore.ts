@@ -9,7 +9,7 @@ interface MessageStack{
 interface AddMessageInput{
     groupId: number,
     messages: Message[],
-    before?: boolean
+    after?: boolean
     newGroup?: boolean
 }
 
@@ -57,8 +57,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         const { messageStack } = get()
         let newStack = messageStack.map((s)=>{
             if(s.groupId == input.groupId){
-                if(input.before) s.messages = [...input.messages, ...s.messages]
-                else s.messages = [...s.messages, ...input.messages]
+                if(input.after)  s.messages = [...s.messages, ...input.messages] 
+                else s.messages = [...input.messages, ...s.messages]
                 added = true
             }
             return s
