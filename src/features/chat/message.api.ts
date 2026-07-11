@@ -25,12 +25,11 @@ export async function sendMessage(input: SendMessageInput){
             "content-type" : "application/json"
         }
     }
-    const response = await request(API_ENDPOINTS.USER.GET_MY_GROUP_LIST, options);
+    const response = await request(API_ENDPOINTS.MESSAGE.POST_MESSAGE(input.groupId), options);
     const result = await response.json()
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
 }
-
 export async function getMessage(input: GetMessageInput) : Promise<GetMessageData> {
     const options: RequestInit = {
         method: "GET",
