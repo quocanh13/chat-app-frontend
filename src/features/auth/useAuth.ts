@@ -12,6 +12,7 @@ export function useAuth(){
     const { setToken } = useAuthStore()
     const { handleApiError } = useApiErrorHandler()
     const registerMutation = useMutation({
+        mutationKey : ["register"],
         mutationFn : AuthApi.register,
         onSuccess(data){
             addToast({
@@ -24,6 +25,7 @@ export function useAuth(){
     })
 
     const loginMutation = useMutation({
+        mutationKey: ["login"],
         mutationFn: AuthApi.login,
         onSuccess(data){
             addToast({
