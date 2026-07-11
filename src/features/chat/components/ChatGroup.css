@@ -170,6 +170,7 @@
     width: 20px;
     height: 20px;
     object-fit: contain; 
+    cursor: pointer;
 }
 
 /* Cấu hình để ẩn input file đè lên nút bấm */
@@ -178,13 +179,7 @@
 }
 
 .file-input-wrapper input[type="file"] {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
+    display: none;
 }
 
 .text-input-field {
@@ -208,4 +203,105 @@
     border: none;
     background: none;
     padding: 0;
+}
+
+/* ========================================== */
+/* File Preview Card Styles                   */
+/* ========================================== */
+
+.file-preview-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #f0f2f5;
+    padding: 10px 14px;
+    border-radius: 12px;
+    max-width: 280px;
+    margin-bottom: 12px;
+    position: relative;
+    border: 1px solid #e4e6eb;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.file-preview-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+}
+
+.file-preview-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.file-preview-info {
+    flex: 1;
+    min-width: 0; /* Khắc phục lỗi text-overflow trong flexbox */
+}
+
+.file-preview-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #050505;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Tự động cắt ngắn tên file dài thành "ten_file_qua_dai..." */
+}
+
+.file-preview-size {
+    font-size: 12px;
+    color: #65676b;
+    margin: 2px 0 0 0;
+}
+
+/* Nút xóa file đính kèm nhanh */
+.file-preview-remove-btn {
+    background: #e4e6eb;
+    border: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #65676b;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    padding: 0;
+}
+
+.file-preview-remove-btn:hover {
+    background-color: #b0b3b8;
+    color: #050505;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Container căn giữa Loader trong danh sách tin nhắn */
+.message-list-loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    width: 100%;
+}
+
+/* Ghi đè (Style lại) Loader cho hợp với nền trắng của khung chat */
+.message-list-loader-container .loader {
+    width: 28px;                     /* Tăng kích thước lên một chút cho dễ nhìn */
+    height: 28px;
+    border: 3px solid #f0f2f5;       /* Đổi nền đường viền thành màu xám nhạt */
+    border-top-color: #0084ff;       /* Đổi màu xoay thành xanh chủ đạo của app */
 }
