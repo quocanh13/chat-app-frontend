@@ -1,9 +1,12 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import * as GroupApi from "./group.api"
 import { useEffect } from "react"
-import { ApiError} from "../../shared/types"
+import { ApiError, TOAST_TYPE} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
 import { useChatStore } from "../../stores/chatStore"
+import { useToastStore } from "../../stores/toastStore"
+import { useCurrentUser } from "../user/useUser"
+import type { GetMyGroupListData, GroupData } from "./group.dto"
 
 export function useGroupList(){
     const queryClient = useQueryClient();
@@ -44,4 +47,26 @@ export function useGroup(groupId: number | null | undefined){
     })
 
     return {groupQuery, group: groupQuery.data}
+}
+
+export function useGroupMutation(){
+    const { handleApiError } = useApiErrorHandler()
+    const { addToast } = useToastStore()
+    const queryClient = useQueryClient()
+
+    const groupMutation = useMutation({
+        mutationKey: ["create-group"],
+        mutationFn: GroupApi.createGroup,
+        onSuccess(data) {
+            queryClient.setQueryData(["group", data.id], data)
+            queryClient.setQueryData<GetMyGroupListData>(["group-list", "me"], (old) => {
+                if(old?.groups)
+                    return {groups: [...old.groups, data]}
+            })
+            addToast({type: TOAST_TYPE.SUCCESS, message: "Create group successfully"})
+        },
+        onError: handleApiError
+    })
+
+    return {createGroup: groupMutation.mutate, isPending: groupMutation.isPending}
 }
