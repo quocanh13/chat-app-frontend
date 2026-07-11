@@ -13,7 +13,8 @@ export const GroupSchema = z.object({
     lastMessage: MessageSchema.nullable(),
     avatarFileId: z.int().positive().nullable(),
     hostId: z.int().positive(),
-    members: z.array(MemberSchema)
+    members: z.array(MemberSchema),
+    createdAt: z.coerce.date()
 });
 
 export const GetMyGroupListSchema = z.object({
