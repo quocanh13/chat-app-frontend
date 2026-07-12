@@ -19,6 +19,7 @@ import defaultUserAvatar from "../../../assets/default-user-avatar.png"
 import attachFileIcon from "../../../assets/attach-file-icon.png"
 import sendMessageIcon from "../../../assets/send-message-icon.png"
 import defaultFileIcon from "../../../assets/default-file-icon.png"
+import { API_ENDPOINTS } from "../../../shared/constant";
 
 
 
@@ -185,7 +186,7 @@ function MemberItem({ member, isCurrentUerHost }: MemberItemProps) {
     if (!user) return null;
     
     const isHost = member.role === "host"
-    const userAvatarUrl = user.avatarFileId ? `/files/${user.avatarFileId}/view` : defaultUserAvatar
+    const userAvatarUrl = user.avatarFileId ? API_ENDPOINTS.FILE.VIEW_FILE(user.avatarFileId) : defaultUserAvatar
 
     function onDeleteMember() {
         if(currentGroupId)
@@ -261,7 +262,7 @@ function MessageItem({message} : {message : Message}){
     if(!currentUser || !sender)
         return
     const isSender = currentUser.id === sender.id
-    const avatarUrl = sender.avatarFileId ? `/files/${sender.avatarFileId}/view` : defaultUserAvatar
+    const avatarUrl = sender.avatarFileId ? API_ENDPOINTS.FILE.VIEW_FILE(sender.avatarFileId) : defaultUserAvatar
     return <div className={`message-item-wrapper ${isSender ? 'sent' : 'received'}`}>
         <img className="message-user-avatar" src={avatarUrl} alt="User Avatar" />
         <div className="message-content-box">
