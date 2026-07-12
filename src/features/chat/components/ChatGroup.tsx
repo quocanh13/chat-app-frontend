@@ -1,5 +1,5 @@
 import { useChatStore } from "../../../stores/chatStore";
-import { useGroup, useMemberMutaion } from "../useGroup";
+import { useGroup, useGroupMutation, useMemberMutaion } from "../useGroup";
 import { type Message } from "../message.dto";
 import { useCurrentUser, useUser } from "../../user/useUser";
 import { useCurrentGroupMessage, useMessage } from "../useMessage";
@@ -7,6 +7,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useToastStore } from "../../../stores/toastStore";
 import { TOAST_TYPE } from "../../../shared/types";
 import { Loader } from "../../../shared/loader/Loader";
+import { AddMemberFormSchema, type AddMemberFormData } from "../group.dto";
+import { onInvalid } from "../../../lib/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 import "./ChatGroup.css";
 import defaultGroupAvatar from "../../../assets/default-group-avatar.png"
@@ -15,11 +19,7 @@ import defaultUserAvatar from "../../../assets/default-user-avatar.png"
 import attachFileIcon from "../../../assets/attach-file-icon.png"
 import sendMessageIcon from "../../../assets/send-message-icon.png"
 import defaultFileIcon from "../../../assets/default-file-icon.png"
-import { AddMemberFormSchema, type AddMemberFormData } from "../group.dto";
-import { onInvalid } from "../../../lib/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useApiErrorHandler } from "../../../lib/api";
+
 
 
 interface GroupInfoModalProps{
@@ -53,6 +53,11 @@ export function ChatGroupHeader(){
     function onCloseGroupInfo(){ setShowGroupInfo(false) }
     function onShowGroupInfo() { setShowGroupInfo(true) }
 
+    useEffect(()=>{
+        if(currentGroupId == null)
+            onCloseGroupInfo()
+    }, [currentGroupId])
+
     const groupName = group?.name ?? ""
     const groupAvatar = group?.avatarFileId ? `/files/${group.avatarFileId}/view` : defaultGroupAvatar
     const numMember = group?.members.length ? `${group.members.length} thành viên` : ``
@@ -80,6 +85,7 @@ function GroupInfoModal({ onCloseGroupInfo }: GroupInfoModalProps) {
     const { currentGroupId } = useChatStore()
     const { group } = useGroup(currentGroupId)
     const { addMember } = useMemberMutaion();
+    const { deleteGroup } = useGroupMutation()
     const { register, handleSubmit } = useForm<AddMemberFormData>({
         resolver: zodResolver(AddMemberFormSchema)
     });
@@ -97,6 +103,8 @@ function GroupInfoModal({ onCloseGroupInfo }: GroupInfoModalProps) {
     }
 
     function onDeleteGroup(){
+        if(group)
+            deleteGroup({groupId: group.id})
     }
 
     return (
@@ -172,13 +180,16 @@ function MemberList({ members, isCurrentUserHost }: MemberListProps) {
 
 function MemberItem({ member, isCurrentUerHost }: MemberItemProps) {
     const { user } = useUser(member.userId)
+    const { currentGroupId } = useChatStore()
+    const { deleteMember } = useMemberMutaion()
     if (!user) return null;
     
     const isHost = member.role === "host"
     const userAvatarUrl = user.avatarFileId ? `/files/${user.avatarFileId}/view` : defaultUserAvatar
 
     function onDeleteMember() {
-        
+        if(currentGroupId)
+            deleteMember({groupId: currentGroupId, memberId: member.userId})
     }
 
     return (
