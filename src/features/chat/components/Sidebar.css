@@ -396,3 +396,47 @@ button.form-submit-btn:active {
 .avatar-edit-wrapper:hover .avatar-edit-overlay {
     opacity: 1; 
 }
+
+/* ==========================================
+   AVATAR & ONLINE STATUS
+   ========================================== */
+.group-avatar-wrapper {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0; /* Chống bị bóp méo khi màn hình nhỏ */
+}
+
+.group-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Chấm trạng thái chung */
+.status-dot {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #ffffff; /* Viền trắng để tách biệt với avatar giống Messenger */
+    z-index: 1;
+}
+
+/* Trạng thái Online (Xanh lá) */
+.status-dot.online {
+    background-color: #31a24c;
+}
+
+/* Trạng thái Offline (Xám) */
+.status-dot.offline {
+    background-color: #ced0d4;
+}
+
+/* UX: Khi group được chọn, viền của chấm khớp với màu nền xanh nhạt cho đẹp mắt */
+.group-item.selected .status-dot {
+    border-color: #e7f3ff;
+}

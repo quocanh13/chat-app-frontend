@@ -5,7 +5,7 @@ import userInformationIcon from "../../../assets/user-information-icon.png";
 import defaultGroupAvatar from "../../../assets/default-group-avatar.png";
 import defaultUserAvatar from "../../../assets/default-user-avatar.png"; 
 import { useCurrentUser, useUser, useUserMutation } from "../../user/useUser";
-import { useGroup, useGroupList, useGroupMutation } from "../useGroup";
+import { useGroup, useGroupList, useGroupMutation, useGroupState } from "../useGroup";
 import { useChatStore } from "../../../stores/chatStore";
 import { timeDiff } from "../../../utils/time";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,6 +59,7 @@ function SidebarHeader({ onOpenUser, onOpenCreateGroup }: SidebarHeaderProps){
 }
 
 function UserInfoModal({ onClose }: { onClose: () => void }){
+
     const { currentUser } = useCurrentUser()
     const { updateUser } = useUserMutation()
     const { addToast } = useToastStore()
@@ -228,11 +229,11 @@ function GroupList(){
 
 function GroupItem({groupId} : {groupId: number}){
     const {group} = useGroup(groupId)
+    const { isOnline } = useGroupState(groupId)
     const userId = group?.hostId ?? group?.lastMessage?.userId
     const {user} = useUser(userId)
     const { currentGroupId, setCurrentGroupId } = useChatStore()
-    if(!group || !user)
-        return
+    if(!group || !user) return;
 
     const isSelected = currentGroupId == groupId
     const avatarUrl = group.avatarFileId ? `file/${group.avatarFileId}/view` : defaultGroupAvatar
@@ -248,10 +249,14 @@ function GroupItem({groupId} : {groupId: number}){
 
     const time = lastMessage.sentAt ? `· ${timeDiff(lastMessage.sentAt)}` : ""
 
-    // Thêm class 'selected' nếu isSelected là true
     return (
         <div className={`group-item ${isSelected ? "selected" : ""}`} onClick={onClick}>
-            <img className="group-avatar" src={avatarUrl} alt="Default Group Avatar" />
+            
+            <div className="group-avatar-wrapper">
+                <img className="group-avatar" src={avatarUrl} alt="Group Avatar" />
+                <span className={`status-dot ${isOnline ? "online" : "offline"}`}></span>
+            </div>
+
             <div className="group-info">
                 <p className="group-name">{group.name}</p>
                 <div className="group-last-message-row">
