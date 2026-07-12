@@ -20,6 +20,7 @@ export const API_ENDPOINTS = {
     GROUP: {
         GET_GROUP_BY_ID(groupId: number) { return API_BASE_URL + `/groups/${groupId}` },
         CREATE_GROUP: API_BASE_URL + "/groups",
+        DELETE_GROUP(groupId: number) { return API_BASE_URL + `/groups/${groupId}` },
         POST_MEMBER(groupId: number) { return API_BASE_URL + `/groups/${groupId}/members`},
         DELETE_MEMBER(groupId: number, memberId: number) { return API_BASE_URL + `/groups/${groupId}/members/${memberId}`}
     },
