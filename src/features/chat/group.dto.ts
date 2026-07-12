@@ -32,5 +32,19 @@ export const CreateGroupResponseData = z.object({
     name: z.string()
 })
 
+export const AddMemberFormSchema = z.object({
+    username: z.string()
+        .min(1, INVALID_SCHEMA_MESSAGE.MIN_LENGTH("Username", 1))
+        .max(30, INVALID_SCHEMA_MESSAGE.MAX_LENGTH("Username", 30))
+        .regex(/^[a-zA-Z0-9]+$/, INVALID_SCHEMA_MESSAGE.USERNAME_REGEX)
+})
+
+export const NewMemberSchema = z.object({
+    groupId: z.int().positive(),
+    userId: z.int().positive(),
+    role: z.enum(["member", "host"])
+})
+
 export type GroupData = z.infer<typeof GroupSchema>
 export type GetMyGroupListData = z.infer<typeof GetMyGroupListSchema>
+export type AddMemberFormData = z.infer<typeof AddMemberFormSchema>
