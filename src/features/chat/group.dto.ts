@@ -45,6 +45,14 @@ export const NewMemberSchema = z.object({
     role: z.enum(["member", "host"])
 })
 
+export const DeleteMemberSchema = z.object({
+    groupId: z.int().positive(),
+    memberId: z.int().positive()
+})
+export const DeleteGrouprSchema = z.object({
+    groupId: z.int().positive(),
+})
+
 export type GroupData = z.infer<typeof GroupSchema>
 export type GetMyGroupListData = z.infer<typeof GetMyGroupListSchema>
 export type AddMemberFormData = z.infer<typeof AddMemberFormSchema>
