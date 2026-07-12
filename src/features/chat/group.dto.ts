@@ -39,18 +39,25 @@ export const AddMemberFormSchema = z.object({
         .regex(/^[a-zA-Z0-9]+$/, INVALID_SCHEMA_MESSAGE.USERNAME_REGEX)
 })
 
+
+
 export const NewMemberSchema = z.object({
     groupId: z.int().positive(),
     userId: z.int().positive(),
     role: z.enum(["member", "host"])
 })
-
 export const DeleteMemberSchema = z.object({
     groupId: z.int().positive(),
     memberId: z.int().positive()
 })
 export const DeleteGrouprSchema = z.object({
     groupId: z.int().positive(),
+})
+export const GroupOnlineSchema = z.object({
+    groupId: z.int().positive()
+})
+export const GroupOfflineSchema = z.object({
+    groupId: z.int().positive()
 })
 
 export type GroupData = z.infer<typeof GroupSchema>
