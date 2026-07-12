@@ -1,4 +1,6 @@
-/* Sidebar.css */
+/* ==========================================
+   SIDEBAR CONTAINER & HEADER
+   ========================================== */
 .sidebar-container {
     width: 360px;
     height: 100%;
@@ -59,7 +61,9 @@
     overflow: hidden;
 }
 
-/* THANH SEARCH GROUP */
+/* ==========================================
+   THANH SEARCH GROUP
+   ========================================== */
 .sidebar-search-container {
     padding: 4px 16px 12px 16px;
 }
@@ -87,7 +91,9 @@
     color: #65676b;
 }
 
-/* Group List */
+/* ==========================================
+   GROUP LIST & GROUP ITEM
+   ========================================== */
 .group-list {
     flex: 1;
     overflow-y: auto;
@@ -105,21 +111,18 @@
     margin-bottom: 4px;
 }
 
-/* Style khi group được chọn (isSelected) */
 .group-item.selected {
-    background-color: #e7f3ff; /* Nền xanh nhạt chuẩn phong cách Messenger */
+    background-color: #e7f3ff; 
 }
 
-/* Tùy chọn: Đổi màu chữ tên nhóm và tin nhắn cuối khi được chọn để nổi bật hơn */
 .group-item.selected .group-name {
-    color: #0084ff; /* Tên nhóm chuyển sang màu xanh dương */
+    color: #0084ff; 
 }
 
 .group-item.selected .group-last-message-row {
-    color: #1877f2; /* Tin nhắn cuối đổi màu xanh nhẹ hơn một chút */
+    color: #1877f2; 
 }
 
-/* Giữ nguyên hiệu ứng hover nhẹ khi đang chọn */
 .group-item.selected:hover {
     background-color: #dbeeff; 
 }
@@ -174,29 +177,25 @@
     flex-shrink: 0;
 }
 
-
 /* ==========================================
-   CSS CHO MODAL HIỂN THỊ CHÍNH GIỮA MÀN HÌNH
+   MODAL BASE HIỂN THỊ CHÍNH GIỮA MÀN HÌNH
    ========================================== */
-
-/* Lớp phủ mờ nền tối toàn bộ website */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4); /* Nền mờ tối nhẹ */
+    background-color: rgba(0, 0, 0, 0.4); 
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100; /* Đảm bảo nổi hẳn lên trên cùng màn hình web */
+    z-index: 100; 
     animation: fadeIn 0.2s ease-out;
 }
 
-/* Hộp nội dung màu trắng nằm ở giữa */
 .modal-container {
-    width: 440px; /* Độ rộng form chuẩn Messenger */
+    width: 440px; 
     max-width: 90%;
     background-color: #ffffff;
     border-radius: 16px;
@@ -215,7 +214,6 @@
     to { transform: scale(1); opacity: 1; }
 }
 
-/* Thanh đầu của Modal */
 .modal-header {
     display: flex;
     align-items: center;
@@ -234,7 +232,6 @@
     flex: 1;
 }
 
-/* Nút tắt dấu X */
 .modal-close-btn {
     border: none;
     background: #f0f2f5;
@@ -257,34 +254,87 @@
     color: #050505;
 }
 
-/* Thân Modal */
 .modal-body {
-    padding: 24px 20px;
+    padding: 24px 32px; /* Tăng padding để form không bị dính lề */
 }
 
-/* Định dạng hiển thị Thẻ Thông Tin User */
+/* ==========================================
+   INPUT & FORM CHUNG CHO TẠO NHÓM & SỬA USER
+   ========================================== */
+.create-group-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #65676b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block; /* Ép xuống dòng */
+    margin-bottom: 4px;
+}
+
+/* Ép kiểu tag input kết hợp class để chống Tailwind/Reset CSS */
+input.form-input {
+    width: 100%; 
+    height: auto;
+    padding: 14px 20px !important; 
+    background-color: #f0f2f5;
+    border: 1.5px solid transparent;
+    border-radius: 12px; 
+    font-size: 15px;
+    outline: none;
+    color: #050505;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    margin-top: 6px;
+}
+
+input.form-input:focus {
+    background-color: #ffffff;
+    border-color: #0084ff;
+    box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.2); 
+}
+
+input.form-input::placeholder {
+    color: #8a8d91;
+    font-weight: 400;
+}
+
+button.form-submit-btn {
+    width: 100%;
+    height: 48px;
+    background: #0084ff;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    margin-top: 16px;
+}
+
+button.form-submit-btn:hover {
+    background: #0073e6;
+}
+
+button.form-submit-btn:active {
+    transform: scale(0.98);
+}
+
+/* ==========================================
+   FORM CHỈNH SỬA THÔNG TIN USER ĐẶC THÙ
+   ========================================== */
 .user-info-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 12px 0;
-}
-
-.user-info-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.user-info-name {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0 0 6px 0;
-    color: #050505;
+    padding: 24px 32px; 
 }
 
 .user-info-username {
@@ -293,76 +343,56 @@
     margin: 0;
 }
 
-/* Định dạng Form Tạo Nhóm */
-.create-group-form {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+.edit-user-form-group {
+    width: 100%;
+    text-align: left; 
+    margin-bottom: 20px; 
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.form-group label {
-    font-size: 13px;
-    font-weight: 700;
-    color: #65676b;
-    text-transform: uppercase; /* Viết hoa chữ nhẹ nhàng tạo cảm giác chuyên nghiệp */
-    letter-spacing: 0.5px;
-}
-
-.form-input {
-    height: 54px; /* Tăng chiều cao lên 54px để trông rộng rãi, cao ráo hơn */
-    background-color: #f0f2f5;
-    border: 1.5px solid transparent;
-    border-radius: 14px; /* Giữ bo góc mềm mại */
-    padding: 0 20px; /* Tăng nhẹ khoảng cách chữ cách lề trái/phải */
-    font-size: 16px; /* Tăng font size lên 16px để cân bằng với chiều cao mới */
-    outline: none;
-    color: #050505;
-    box-sizing: border-box;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Hiệu ứng mượt mà khi người dùng click vào ô nhập liệu */
-.form-input:focus {
-    background-color: #ffffff;
-    border-color: #0084ff;
-    box-shadow: 0 0 0 4px rgba(0, 132, 255, 0.15); /* Hào quang xanh mờ */
-}
-
-/* Đổi màu chữ gợi ý sang màu xám thanh lịch */
-.form-input::placeholder {
-    color: #8a8d91;
-    font-weight: 400;
-}
-
-/* Làm lại nút bấm Submit sang xịn mịn */
-.form-submit-btn {
-    height: 48px;
-    background: linear-gradient(135deg, #0084ff, #006dd3); /* Đổ màu gradient xanh chuyển sắc nhẹ */
-    color: #ffffff;
-    border: none;
-    border-radius: 14px;
-    font-size: 15px;
-    font-weight: 600;
+.avatar-edit-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 132, 255, 0.25); /* Tạo bóng đổ sâu cho nút */
-    transition: transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease;
-    margin-top: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Hiệu ứng khi lướt chuột qua nút */
-.form-submit-btn:hover {
-    box-shadow: 0 6px 16px rgba(0, 132, 255, 0.35);
-    background: linear-gradient(135deg, #008fff, #0076e5);
+.user-info-avatar.editable {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0;
+    box-shadow: none;
+    transition: filter 0.3s ease;
 }
 
-/* Hiệu ứng nảy nhẹ cực đã khi click chuột xuống (Active) */
-.form-submit-btn:active {
-    transform: scale(0.98);
-    box-shadow: 0 2px 6px rgba(0, 132, 255, 0.2);
+.avatar-edit-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; 
+    transition: opacity 0.3s ease;
+}
+
+.avatar-edit-overlay span {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.avatar-edit-wrapper:hover .user-info-avatar.editable {
+    filter: brightness(0.8);
+}
+
+.avatar-edit-wrapper:hover .avatar-edit-overlay {
+    opacity: 1; 
 }
