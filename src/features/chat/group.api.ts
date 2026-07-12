@@ -1,6 +1,6 @@
 import { request } from "../../lib/api";
 import { API_ENDPOINTS } from "../../shared/constant";
-import { ApiError } from "../../shared/types";
+import { ApiError, type ApiResponse } from "../../shared/types";
 import {  GetMyGroupListSchema, GroupSchema, type GetMyGroupListData } from "./group.dto";
 
 interface GetGroupByIdInput{
@@ -8,6 +8,10 @@ interface GetGroupByIdInput{
 }
 interface CreateGroupInput{
     name: string
+}
+interface AddMemberInput{
+    groupId: number,
+    username: string
 }
 
 export async function getMyGroupList() : Promise<GetMyGroupListData> {
@@ -57,4 +61,19 @@ export async function createGroup(input: CreateGroupInput) {
     if(!dto.success)
         throw new ApiError()
     return dto.data 
+}
+export async function addMember(input: AddMemberInput) {
+    const options: RequestInit = {
+        method: "POST",
+        body : JSON.stringify({username: input.username}),
+        headers : {
+            "content-type" : "application/json"
+        }
+    }
+    const response = await request(API_ENDPOINTS.GROUP.POST_MEMBER(input.groupId), options);
+    if(!response.ok){
+        const result = await response.json() as ApiResponse
+        throw new ApiError(result.message!, result.error, result.detail)
+    }
+    return
 }
