@@ -15,7 +15,7 @@ export const API_ENDPOINTS = {
         GET_ME : API_BASE_URL + `/users/me`,
         GET_MY_GROUP_LIST : API_BASE_URL + `/users/me/groups`,
         GET_USER_BY_ID(userId: number) { return API_BASE_URL + `/users/${userId}` },
-        PUT_USER_BY_ID(userId: number) { return API_BASE_URL + `users/${userId}` }
+        PATCH_USER_BY_ID(userId: number) { return API_BASE_URL + `/users/${userId}` }
     },
     GROUP: {
         GET_GROUP_BY_ID(groupId: number) { return API_BASE_URL + `/groups/${groupId}` },
@@ -46,5 +46,6 @@ export const INVALID_SCHEMA_MESSAGE = {
         return `${field} must contain less than ${len} character`
     },
     USERNAME_REGEX: "Username can only contain letters (a-z, A-Z) and numbers (0-9)",
-    NAME_REGEX: "Name must not contain digit (0-9) and special symbol"
+    NAME_REGEX: "Name must not contain digit (0-9) and special symbol",
+    EMAIL:  "Invalid email format"
 }
