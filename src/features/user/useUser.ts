@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import * as UserApi from "./user.api"
 import { useEffect } from "react"
-import { ApiError} from "../../shared/types"
+import { ApiError, TOAST_TYPE} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
 import { useAuthStore } from "../../stores/authStore"
+import { useToastStore } from "../../stores/toastStore"
 
 
 export function useCurrentUser(){
@@ -50,4 +51,23 @@ export function useUser(userId: number | undefined){
     }, [userQuery.isError])
 
     return {userQuery, user: userQuery.data}
+}
+
+export function useUserMutation(){
+    const { addToast } = useToastStore()
+    const { handleApiError } = useApiErrorHandler()
+    const queryClient = useQueryClient()
+
+    const updateUserMutation = useMutation({
+        mutationKey: ["update-user"],
+        mutationFn: UserApi.updateUser,
+        onSuccess(data){
+            queryClient.setQueryData(["user", "me"], ()=>data)
+            queryClient.setQueryData(["user", data.id], ()=>data)
+            addToast({type: TOAST_TYPE.SUCCESS, message: "Update user information successfully"})
+        },
+        onError: handleApiError
+    })
+
+    return {updateUser: updateUserMutation.mutate}
 }
