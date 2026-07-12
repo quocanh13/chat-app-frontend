@@ -24,7 +24,6 @@ export async function getUserById(input: GetUserByIdInput) {
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
     const dto = GetUserDataSchema.safeParse(result)
-    console.log(dto.error?.flatten())
     if(!dto.success)
         throw new ApiError()
 
