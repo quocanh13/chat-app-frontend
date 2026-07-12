@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { DeleteGrouprSchema, DeleteMemberSchema, type GetMyGroupListData, type GroupData, GroupSchema, NewMemberSchema } from "./group.dto";
+import { DeleteGrouprSchema, DeleteMemberSchema, type GetMyGroupListData, type GroupData, GroupOfflineSchema, GroupOnlineSchema, GroupSchema, NewMemberSchema } from "./group.dto";
 import { useToastStore } from "../../stores/toastStore";
 import { TOAST_TYPE } from "../../shared/types";
 import { useChatStore } from "../../stores/chatStore";
@@ -70,5 +70,25 @@ export function useGroupSocket(){
         })
     }
 
-    return {onNewMember, onNewGroup, onDeleteMember, onDeleteGroup}
+    function onGroupOnline(data: any){
+        const dto = GroupOnlineSchema.safeParse(data)
+        if(!dto.success){
+            console.log(dto.error.flatten())
+            return
+        }
+        console.log("Online" + dto.data.groupId)
+        queryClient.setQueryData<boolean>(["group", "online", dto.data.groupId], () => true)
+    }
+
+    function onGroupOffline(data: any){
+        const dto = GroupOfflineSchema.safeParse(data)
+        if(!dto.success){
+            console.log(dto.error.flatten())
+            return
+        }
+        console.log("Offline" + dto.data.groupId)
+        queryClient.setQueryData<boolean>(["group", "online", dto.data.groupId], () => false)
+    }
+
+    return {onNewMember, onNewGroup, onDeleteMember, onDeleteGroup, onGroupOnline, onGroupOffline}
 }
