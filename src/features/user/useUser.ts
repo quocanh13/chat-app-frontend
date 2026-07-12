@@ -38,7 +38,8 @@ export function useUser(userId: number | undefined){
         queryFn(){
             return UserApi.getUserById({userId: userId!})
         },
-        enabled: userId !== undefined
+        enabled: userId !== undefined,
+        staleTime: Infinity
     })
 
     useEffect(()=>{
