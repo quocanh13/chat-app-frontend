@@ -2,7 +2,7 @@ import type z from "zod";
 import { request } from "../../lib/api";
 import { API_ENDPOINTS } from "../../shared/constant";
 import { ApiError } from "../../shared/types";
-import { GetFileResponseDataScheme, PostFileResponseDataSchema } from "./file.dto";
+import { GetFileResponseDataSchema, PostFileResponseDataSchema } from "./file.dto";
 
 interface SendFileInput{
     file: File,
@@ -38,7 +38,7 @@ export async function getFileInformation(input: GetFileInformation) {
     const result = await response.json()
     if(!response.ok)
         throw new ApiError(result.message!, result.error, result.detail)
-    const dto = GetFileResponseDataScheme.safeParse(result)
+    const dto = GetFileResponseDataSchema.safeParse(result)
     if(!dto.success)
         throw new ApiError()
 
