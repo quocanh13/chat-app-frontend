@@ -51,8 +51,17 @@ export function useGroup(groupId: number | null | undefined){
         enabled: !!groupId,
         staleTime: Infinity
     })
-
     return {groupQuery, group: groupQuery.data}
+}
+
+export function useGroupState(groupId: number | null | undefined){
+    const onlineQuery = useQuery<boolean>({
+        queryKey: ["group", "online", groupId],
+        queryFn: () => false,
+        staleTime: Infinity
+    })
+
+    return {isOnline: onlineQuery.data}
 }
 
 export function useGroupMutation(){
