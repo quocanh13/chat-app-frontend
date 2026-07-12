@@ -5,8 +5,7 @@ import { ApiError, TOAST_TYPE} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
 import { useChatStore } from "../../stores/chatStore"
 import { useToastStore } from "../../stores/toastStore"
-import { useCurrentUser } from "../user/useUser"
-import type { GetMyGroupListData, GroupData } from "./group.dto"
+import type { GetMyGroupListData} from "./group.dto"
 
 export function useGroupList(){
     const queryClient = useQueryClient();
@@ -49,7 +48,8 @@ export function useGroup(groupId: number | null | undefined){
     const groupQuery = useQuery({
         queryKey: ["group", groupId],
         queryFn: () => { return GroupApi.getGroupById({groupId: groupId!}) },
-        enabled: !!groupId
+        enabled: !!groupId,
+        staleTime: Infinity
     })
 
     return {groupQuery, group: groupQuery.data}
@@ -75,4 +75,20 @@ export function useGroupMutation(){
     })
 
     return {createGroup: groupMutation.mutate, isPending: groupMutation.isPending}
+}
+
+export function useMemberMutaion(){
+    const { handleApiError } = useApiErrorHandler()
+    const { addToast } = useToastStore()
+
+    const addMemberMuation = useMutation({
+        mutationKey: ["add-member"],
+        mutationFn: GroupApi.addMember,
+        onSuccess(data) {
+            addToast({type: TOAST_TYPE.SUCCESS, message: "Add member successfully"})
+        },
+        onError: handleApiError
+    })
+
+    return {addMember: addMemberMuation.mutate}
 }
