@@ -13,6 +13,13 @@ interface AddMemberInput{
     groupId: number,
     username: string
 }
+interface DeleteMemberInput{
+    groupId: number,
+    memberId: number
+}
+interface DeleteGroupInput{
+    groupId: number
+}
 
 export async function getMyGroupList() : Promise<GetMyGroupListData> {
     const options: RequestInit = {
@@ -76,4 +83,27 @@ export async function addMember(input: AddMemberInput) {
         throw new ApiError(result.message!, result.error, result.detail)
     }
     return
+}
+export async function deleteMember(input: DeleteMemberInput) {
+    const options: RequestInit = {
+        method: "DELETE"
+    }
+    const response = await request(API_ENDPOINTS.GROUP.DELETE_MEMBER(input.groupId, input.memberId), options);
+    if(!response.ok){
+        const result = await response.json() as ApiResponse
+        throw new ApiError(result.message!, result.error, result.detail)
+    }
+    return 
+}
+
+export async function deleteGroup(input: DeleteGroupInput) {
+    const options: RequestInit = {
+        method: "DELETE"
+    }
+    const response = await request(API_ENDPOINTS.GROUP.DELETE_GROUP(input.groupId), options);
+    if(!response.ok){
+        const result = await response.json() as ApiResponse
+        throw new ApiError(result.message!, result.error, result.detail)
+    }
+    return 
 }
