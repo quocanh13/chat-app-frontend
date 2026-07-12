@@ -5,14 +5,17 @@ import { useGroupSocket } from "../chat/group.socket";
 
 export function useSocket(){
     const { onNewMessage } = useMessageSocket()
-    const { onNewMember, onNewGroup, onDeleteMember, onDeleteGroup } = useGroupSocket()
+    const { onNewMember, onNewGroup, onDeleteMember, onDeleteGroup, onGroupOnline, onGroupOffline } = useGroupSocket()
     useEffect(()=>{
         console.log("Attach socket handler")
+        socket.connect()
         socket.on("message:new", onNewMessage)
         socket.on("group:new-member", onNewMember)
         socket.on("group:new", onNewGroup)
         socket.on("group:delete-member", onDeleteMember)
         socket.on("group:delete", onDeleteGroup)
+        socket.on("group:online", onGroupOnline)
+        socket.on("group:offline", onGroupOffline)
 
         return () => {
             console.log("Remove socket handler")
@@ -20,6 +23,8 @@ export function useSocket(){
             socket.off("group:new-member", onNewMember)
             socket.off("group:new", onNewGroup)
             socket.off("group:delete", onDeleteGroup)
+            socket.off("group:online", onGroupOnline)
+            socket.off("group:offline", onGroupOffline)
         }
     }, [])
 }
