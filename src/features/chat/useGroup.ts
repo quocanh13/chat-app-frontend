@@ -60,7 +60,7 @@ export function useGroupMutation(){
     const { addToast } = useToastStore()
     const queryClient = useQueryClient()
 
-    const groupMutation = useMutation({
+    const createGroupMutation = useMutation({
         mutationKey: ["create-group"],
         mutationFn: GroupApi.createGroup,
         onSuccess(data) {
@@ -74,7 +74,21 @@ export function useGroupMutation(){
         onError: handleApiError
     })
 
-    return {createGroup: groupMutation.mutate, isPending: groupMutation.isPending}
+    const deleteGroupMutation = useMutation({
+        mutationKey: ["delete-group"],
+        mutationFn: GroupApi.deleteGroup,
+        onSuccess(data){
+            addToast({type: TOAST_TYPE.SUCCESS, message: "Delete group successfully"})
+        },
+        onError: handleApiError
+    })
+
+    return {
+        createGroup: createGroupMutation.mutate, 
+        deleteGroup: deleteGroupMutation.mutate,
+        isCreatePending: createGroupMutation.isPending,
+        isDeletePending: deleteGroupMutation.isPending,
+    }
 }
 
 export function useMemberMutaion(){
@@ -90,5 +104,14 @@ export function useMemberMutaion(){
         onError: handleApiError
     })
 
-    return {addMember: addMemberMuation.mutate}
+    const deleteMemberMutation = useMutation({
+        mutationKey: ["delete-member"],
+        mutationFn: GroupApi.deleteMember,
+        onSuccess(data) {
+            addToast({type: TOAST_TYPE.SUCCESS, message: "Delete member successfully"})
+        },
+        onError: handleApiError
+    })
+
+    return {addMember: addMemberMuation.mutate, deleteMember: deleteMemberMutation.mutate}
 }
