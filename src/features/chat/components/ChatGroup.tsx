@@ -1,5 +1,5 @@
 import { useChatStore } from "../../../stores/chatStore";
-import { useGroup } from "../useGroup";
+import { useGroup, useMemberMutaion } from "../useGroup";
 import { type Message } from "../message.dto";
 import { useCurrentUser, useUser } from "../../user/useUser";
 import { useCurrentGroupMessage, useMessage } from "../useMessage";
@@ -15,6 +15,28 @@ import defaultUserAvatar from "../../../assets/default-user-avatar.png"
 import attachFileIcon from "../../../assets/attach-file-icon.png"
 import sendMessageIcon from "../../../assets/send-message-icon.png"
 import defaultFileIcon from "../../../assets/default-file-icon.png"
+import { AddMemberFormSchema, type AddMemberFormData } from "../group.dto";
+import { onInvalid } from "../../../lib/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useApiErrorHandler } from "../../../lib/api";
+
+
+interface GroupInfoModalProps{
+    onCloseGroupInfo: ()=>void
+}
+interface Member{
+    userId: number,
+    role: "member" | "host"
+}
+interface MemberListProps{
+    members: Member[],
+    isCurrentUserHost: boolean
+}
+interface MemberItemProps{
+    member: Member,
+    isCurrentUerHost: boolean
+}
 
 export function ChatGroup(){
     return <div className="chat-group-container">
@@ -27,6 +49,9 @@ export function ChatGroup(){
 export function ChatGroupHeader(){
     const {currentGroupId} = useChatStore()
     const {group} = useGroup(currentGroupId)
+    const [showGroupInfo, setShowGroupInfo] = useState(false)
+    function onCloseGroupInfo(){ setShowGroupInfo(false) }
+    function onShowGroupInfo() { setShowGroupInfo(true) }
 
     const groupName = group?.name ?? ""
     const groupAvatar = group?.avatarFileId ? `/files/${group.avatarFileId}/view` : defaultGroupAvatar
@@ -40,11 +65,149 @@ export function ChatGroupHeader(){
                 <p className="header-subtitle">{numMember}</p>
             </div>
         </div>
-
-        <div className="header-btn">
-            <img className="header-icon" src={groupInfomationIcon} alt="" />
-        </div>
+        {
+            group && <div className="header-btn">
+                <img className="header-icon" src={groupInfomationIcon} alt="" onClick={onShowGroupInfo}/>
+            </div>
+        }
+        {showGroupInfo && <GroupInfoModal onCloseGroupInfo={onCloseGroupInfo}/>}
     </div>
+}
+
+
+function GroupInfoModal({ onCloseGroupInfo }: GroupInfoModalProps) {
+    const { currentUser } = useCurrentUser()
+    const { currentGroupId } = useChatStore()
+    const { group } = useGroup(currentGroupId)
+    const { addMember } = useMemberMutaion();
+    const { register, handleSubmit } = useForm<AddMemberFormData>({
+        resolver: zodResolver(AddMemberFormSchema)
+    });
+
+    if(!group || !currentUser) {
+        return null; 
+    }
+
+    const isCurrentUserHost = currentUser.id === group.hostId
+    const groupAvatrUrl = group.avatarFileId ? `/files/${group.avatarFileId}/view` : defaultGroupAvatar
+
+    function onValid(data: AddMemberFormData) {
+        if(group)
+            addMember({groupId: group.id, username: data.username})
+    }
+
+    function onDeleteGroup(){
+    }
+
+    return (
+        <div className="modal-overlay" onClick={onCloseGroupInfo}>
+            <div className="group-info-modal-content" onClick={(e) => e.stopPropagation()}>
+                
+                <button className="modal-close-btn" onClick={onCloseGroupInfo} aria-label="Close modal">
+                    ✕
+                </button>
+
+                <div className="group-info-summary">
+                    <img className="group-info-avatar" src={groupAvatrUrl} alt="Group Avatar" />
+                    <div className="group-info-detail">
+                        <h4 className="group-info-name">{group.name}</h4>
+                        <p className="group-info-count">Số thành viên: <span>{group.members.length}</span></p>
+                    </div>
+                </div>
+
+                <div className="add-member-section">
+                    <h6 className="section-title">Thêm thành viên mới</h6>
+                    <form className="add-member-form" onSubmit={handleSubmit(onValid, onInvalid)}>
+                        <input
+                            type="text"
+                            className="add-member-input"
+                            placeholder="Nhập username cần thêm..."
+                            {...register("username")}
+                        />
+                        <button type="submit" className="add-member-btn">
+                            Thêm
+                        </button>
+                    </form>
+                </div>
+                
+                <div className="group-info-members-section">
+                    <MemberList members={group.members} isCurrentUserHost={isCurrentUserHost}/>
+                </div>
+
+                <div className="group-action-section">
+                    <button className="leave-delete-group-btn" onClick={onDeleteGroup}>
+                        {isCurrentUserHost ? "Xóa nhóm" : "Rời nhóm"}
+                    </button>
+                </div>
+                
+            </div>
+        </div>
+    );
+}
+
+function MemberList({ members, isCurrentUserHost }: MemberListProps) {
+    return (
+        <div className="member-list-wrapper">
+            <h6 className="member-list-title">Danh Sách Thành Viên</h6>
+            <div className="member-table-responsive">
+                <table className="member-table">
+                    <thead>
+                        <tr>
+                            <th>Thành viên</th>
+                            <th>Username</th>
+                            <th>Vai trò</th>
+                            <th style={{ width: '80px', textAlign: 'center' }}>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {members.map(member => (
+                            <MemberItem key={member.userId} member={member} isCurrentUerHost={isCurrentUserHost}/>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
+
+function MemberItem({ member, isCurrentUerHost }: MemberItemProps) {
+    const { user } = useUser(member.userId)
+    if (!user) return null;
+    
+    const isHost = member.role === "host"
+    const userAvatarUrl = user.avatarFileId ? `/files/${user.avatarFileId}/view` : defaultUserAvatar
+
+    function onDeleteMember() {
+        
+    }
+
+    return (
+        <tr className="member-table-row">
+            <td>
+                <div className="member-cell-user">
+                    <img className="member-cell-avatar" src={userAvatarUrl} alt="User Avatar" />
+                    <span className="member-cell-name">{user.name}</span>
+                </div>
+            </td>
+            <td>
+                <span className="member-cell-username">@{user.username}</span>
+            </td>
+            <td>
+                <span className={`member-role-badge ${isHost ? 'host' : 'member'}`}>
+                    {isHost ? 'Trưởng nhóm' : 'Thành viên'}
+                </span>
+            </td>
+            <td style={{ textAlign: 'center' }}>
+                {isCurrentUerHost && !isHost ? (
+                    <button className="member-delete-btn" onClick={onDeleteMember}>
+                        Xóa
+                    </button>
+                ) : (
+                    <span className="member-host-action">-</span>
+                )}
+            </td>
+        </tr>
+    );
 }
 
 function MessageList(){

@@ -305,3 +305,343 @@
     border: 3px solid #f0f2f5;       /* Đổi nền đường viền thành màu xám nhạt */
     border-top-color: #0084ff;       /* Đổi màu xoay thành xanh chủ đạo của app */
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; 
+    animation: modalFadeIn 0.25s ease-out;
+}
+
+/* Khung nội dung chính to ở giữa màn hình[cite: 3] */
+.group-info-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 650px; 
+    max-height: 85vh; 
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+    padding: 32px 24px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    overflow-y: auto; 
+    animation: modalSlideUp 0.25s ease-out;
+}
+
+/* Nút Đóng (✕) ở góc trên bên phải[cite: 3] */
+.modal-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background-color: #f0f2f5;
+    color: #65676b;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    z-index: 10;
+}
+
+.modal-close-btn:hover {
+    background-color: #e4e6eb;
+    color: #050505;
+}
+
+/* Tinh chỉnh phần tóm tắt thông tin nằm trong popup[cite: 3] */
+.group-info-summary {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.group-info-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f0f2f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.group-info-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.group-info-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #050505;
+    margin: 0;
+}
+
+.group-info-count {
+    font-size: 14px;
+    color: #65676b;
+    margin: 0;
+}
+
+.group-info-count span {
+    font-weight: 600;
+    color: #0084ff;
+}
+
+/* ========================================== */
+/* Add Member Section                         */
+/* ========================================== */
+
+.add-member-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #050505;
+    margin: 0;
+}
+
+.add-member-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.add-member-input {
+    flex: 1;
+    height: 40px;
+    background-color: #f0f2f5;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    padding: 0 16px;
+    font-size: 14px;
+    outline: none;
+    color: #050505;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.add-member-input:focus {
+    background-color: #ffffff;
+    border-color: #0084ff;
+    box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.2);
+}
+
+.add-member-input::placeholder {
+    color: #65676b;
+}
+
+.add-member-btn {
+    background-color: #0084ff;
+    color: #ffffff;
+    border: none;
+    height: 40px;
+    padding: 0 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.add-member-btn:hover {
+    background-color: #0073e6;
+}
+
+.add-member-btn:active {
+    transform: scale(0.96);
+}
+
+.group-action-section {
+    display: flex;
+    justify-content: flex-end; /* Căn nút xích sang lề phải */
+    padding-top: 16px;
+    border-top: 1px solid #f0f2f5;
+    margin-top: 8px;
+}
+
+.leave-delete-group-btn {
+    background-color: #ffebe9; /* Nền đỏ cực nhạt tinh tế */
+    color: #fa383e;            /* Chữ đỏ */
+    border: 1px solid rgba(250, 56, 62, 0.2);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hiệu ứng trỏ chuột: Đỏ rực lên */
+.leave-delete-group-btn:hover {
+    background-color: #fa383e;
+    color: #ffffff;
+    border-color: #fa383e;
+    box-shadow: 0 4px 12px rgba(250, 56, 62, 0.2);
+}
+
+.leave-delete-group-btn:active {
+    transform: scale(0.96);
+}
+
+/* ========================================== */
+/* Danh sách thành viên (MemberList)[cite: 3]          */
+/* ========================================== */
+
+.group-info-members-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.member-list-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #050505;
+    margin: 0 0 16px 0;
+}
+
+.member-table-responsive {
+    width: 100%;
+    border: 1px solid #e4e6eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ========================================== */
+/* Từng thành viên (MemberItem)               */
+/* ========================================== */
+
+.member-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.member-table th {
+    padding: 12px 16px;
+    background-color: #f7f8fa;
+    color: #65676b;
+    font-size: 13px;
+    font-weight: 600;
+    border-bottom: 1px solid #e4e6eb;
+}
+
+.member-table td {
+    padding: 8px 16px;   
+    border-bottom: 1px solid #f0f2f5;
+    vertical-align: middle;
+    color: #050505;
+}
+
+.member-table tr:last-child td {
+    border-bottom: none; 
+}
+
+.member-table tr:hover td {
+    background-color: #fafbfc; 
+}
+
+.member-cell-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.member-cell-avatar {
+    width: 24px;         
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.member-cell-name {
+    font-weight: 500;
+    color: #050505;
+    font-size: 15px;
+}
+
+.member-cell-username {
+    color: #65676b;
+    font-size: 14px;
+}
+
+.member-role-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.member-role-badge.host {
+    background-color: #e7f3ff; 
+    color: #0084ff;            
+}
+
+.member-role-badge.member {
+    background-color: #f0f2f5; 
+    color: #65676b;            
+}
+
+.member-host-action {
+    color: #bcc0c4;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.member-delete-btn {
+    background-color: #fa383e; 
+    color: #ffffff;            
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.member-delete-btn:hover {
+    background-color: #d92b2f; 
+}
+
+.member-delete-btn:active {
+    transform: scale(0.96);    
+}
+
+/* ========================================== */
+/* Animation mượt mà khi mở modal[cite: 3]             */
+/* ========================================== */
+
+@keyframes modalFadeIn {
+    from { background-color: rgba(0, 0, 0, 0); }
+    to { background-color: rgba(0, 0, 0, 0.5); }
+}
+
+@keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
