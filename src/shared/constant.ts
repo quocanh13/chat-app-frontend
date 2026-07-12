@@ -19,7 +19,9 @@ export const API_ENDPOINTS = {
     },
     GROUP: {
         GET_GROUP_BY_ID(groupId: number) { return API_BASE_URL + `/groups/${groupId}` },
-        CREATE_GROUP: API_BASE_URL + "/groups"
+        CREATE_GROUP: API_BASE_URL + "/groups",
+        POST_MEMBER(groupId: number) { return API_BASE_URL + `/groups/${groupId}/members`},
+        DELETE_MEMBER(groupId: number, memberId: number) { return API_BASE_URL + `/groups/${groupId}/members/${memberId}`}
     },
     MESSAGE: {
         GET_MESSAGE_BY_GROUP_ID(input: GetMessageByGroupIdInput) { 
@@ -32,7 +34,7 @@ export const API_ENDPOINTS = {
         GET_FILE(id: number) { return API_BASE_URL + `/files/${id}` },
         VIEW_FILE(id: number) { return API_BASE_URL + `/files/${id}/view` },
         DOWNLOAD_FILE(id: number) { return API_BASE_URL + `/files/${id}/download` },
-    }
+    },
 };
 
 export const INVALID_SCHEMA_MESSAGE = {
