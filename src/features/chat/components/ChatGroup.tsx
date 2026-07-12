@@ -3,7 +3,7 @@ import { useGroup, useGroupMutation, useMemberMutaion } from "../useGroup";
 import { type Message } from "../message.dto";
 import { useCurrentUser, useUser } from "../../user/useUser";
 import { useCurrentGroupMessage, useMessage } from "../useMessage";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useToastStore } from "../../../stores/toastStore";
 import { TOAST_TYPE } from "../../../shared/types";
 import { Loader } from "../../../shared/loader/Loader";
@@ -20,6 +20,8 @@ import attachFileIcon from "../../../assets/attach-file-icon.png"
 import sendMessageIcon from "../../../assets/send-message-icon.png"
 import defaultFileIcon from "../../../assets/default-file-icon.png"
 import { API_ENDPOINTS } from "../../../shared/constant";
+import { useFile } from "../../file/useFile";
+import { getFileSize } from "../../../utils/file";
 
 
 
@@ -225,26 +227,43 @@ function MemberItem({ member, isCurrentUerHost }: MemberItemProps) {
 function MessageList(){
     const { currentGroupId, currentGroupMessages } = useChatStore()
     const { getMoreMessage, isLoading } = useCurrentGroupMessage()
-    const containerRef = useRef<HTMLDivElement>(null)
-    const scollHeightRef = useRef(0)
-    
-    function onScroll(e: React.UIEvent){
-        if(e.currentTarget.scrollTop == 0 && currentGroupMessages){
-            scollHeightRef.current = containerRef.current?.scrollHeight ?? 0
-            getMoreMessage()
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    const prevHeightRef = useRef(0);
+    const isLoadMore = useRef(true)
+
+    function onScroll(e: React.UIEvent<HTMLDivElement>) {
+        if (e.currentTarget.scrollTop === 0 &&currentGroupMessages && !isLoading
+        ) {
+            if(containerRef.current)
+                prevHeightRef.current = containerRef.current.scrollHeight
+            isLoadMore.current = true
+            getMoreMessage();
         }
     }
 
     useEffect(() => {
-        if ( currentGroupId && !isLoading && !currentGroupMessages)
+        if (currentGroupId && !currentGroupMessages && !isLoading) {
+            isLoadMore.current = true
+            if(containerRef.current)
+                prevHeightRef.current = containerRef.current.scrollHeight
             getMoreMessage();
-    }, [currentGroupId, currentGroupMessages, isLoading]);
+        }
+    }, [currentGroupId]);
 
-    useEffect(()=>{
-        if(!containerRef.current)
-            return
-        containerRef.current.scrollTop = containerRef.current.scrollHeight - scollHeightRef.current
-    }, [currentGroupMessages])
+    useLayoutEffect(() => {
+        if (!containerRef.current) return;
+        const d = containerRef.current.scrollHeight - prevHeightRef.current;
+        if(isLoadMore.current){
+            containerRef.current.scrollTop += d
+            isLoadMore.current = false
+        } else {
+
+            containerRef.current.scrollTop += d
+            prevHeightRef.current = containerRef.current.scrollHeight
+        }
+
+    }, [currentGroupMessages]);
 
     return <div className="message-list" onScroll={onScroll} ref={containerRef}>
         {isLoading && (
@@ -258,17 +277,54 @@ function MessageList(){
 
 function MessageItem({message} : {message : Message}){
     const { currentUser } = useCurrentUser()
+    const { file } = useFile(message.fileId)
     const sender = useUser(message.userId).user
+    
     if(!currentUser || !sender)
-        return
+        return null;
+
     const isSender = currentUser.id === sender.id
     const avatarUrl = sender.avatarFileId ? API_ENDPOINTS.FILE.VIEW_FILE(sender.avatarFileId) : defaultUserAvatar
-    return <div className={`message-item-wrapper ${isSender ? 'sent' : 'received'}`}>
-        <img className="message-user-avatar" src={avatarUrl} alt="User Avatar" />
-        <div className="message-content-box">
-            <p>{message.content}</p>
+    if(file){
+        const downloadFileUrl = API_ENDPOINTS.FILE.DOWNLOAD_FILE(file.id)
+        const isImage = file.mimeType?.startsWith('image/');
+        const viewImageUrl = API_ENDPOINTS.FILE.VIEW_FILE(file.id);
+        return (
+            <div className={`message-item-wrapper ${isSender ? 'sent' : 'received'}`}>
+                <img className="message-user-avatar" src={avatarUrl} alt="User Avatar" />
+                <a 
+                    href={downloadFileUrl} 
+                    download={file.name} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="message-file-link"
+                >
+                    {isImage ? (
+                        <img src={viewImageUrl} alt={file.name} className="message-image" />
+                    ) : (
+                        <div className="message-file-card">
+                            <div className="file-preview-icon-wrapper">
+                                <img className="file-preview-icon" src={defaultFileIcon} alt="File icon" />
+                            </div>
+                            <div className="file-preview-info">
+                                <p className="file-preview-name">{file.name}</p>
+                                <p className="file-preview-size">{getFileSize(file.size)}</p>
+                            </div>
+                        </div>
+                    )}
+                </a>
+            </div>
+        );
+    }
+
+    return (
+        <div className={`message-item-wrapper ${isSender ? 'sent' : 'received'}`}>
+            <img className="message-user-avatar" src={avatarUrl} alt="User Avatar" />
+            <div className="message-content-box">
+                <p>{message.content}</p>
+            </div>
         </div>
-    </div>
+    )
 }
 
 function MessageInput(){
@@ -324,14 +380,6 @@ function MessageInput(){
 }
 
 function FileAttachmentPreview({ file, onRemove }: { file: File; onRemove: () => void }) {
-    const formatSize = (bytes: number) => {
-        if (bytes === 0) return "0 Bytes";
-        const k = 1024;
-        const sizes = ["Bytes", "KB", "MB"];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
-    };
-
     return (
         <div className="file-preview-card">
             <div className="file-preview-icon-wrapper">
@@ -339,7 +387,7 @@ function FileAttachmentPreview({ file, onRemove }: { file: File; onRemove: () =>
             </div>
             <div className="file-preview-info">
                 <p className="file-preview-name">{file.name}</p>
-                <p className="file-preview-size">{formatSize(file.size)}</p>
+                <p className="file-preview-size">{getFileSize(file.size)}</p>
             </div>
             <button type="button" className="file-preview-remove-btn" onClick={onRemove}>
                 ✕
