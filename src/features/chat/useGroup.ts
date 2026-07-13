@@ -5,7 +5,7 @@ import { ApiError, TOAST_TYPE} from "../../shared/types"
 import { useApiErrorHandler } from "../../lib/api"
 import { useChatStore } from "../../stores/chatStore"
 import { useToastStore } from "../../stores/toastStore"
-import type { GetMyGroupListData} from "./group.dto"
+import { type GroupData, type GetMyGroupListData} from "./group.dto"
 
 export function useGroupList(){
     const queryClient = useQueryClient();
@@ -92,11 +92,28 @@ export function useGroupMutation(){
         onError: handleApiError
     })
 
+    const updateGroupMutation = useMutation({
+        mutationKey: ["update-group"],
+        mutationFn: GroupApi.updateGroup,
+        onSuccess(data) {
+            addToast({type: TOAST_TYPE.SUCCESS, message: "Update group successfully"})
+            console.log(123)
+            queryClient.setQueryData<GroupData>(["group", data.id], (old)=>{
+                if(!old) return old
+                return {...old, name: data.name, avatarFileId: data.avatarFileId}
+            })
+        },
+        onError: handleApiError
+    })
+
     return {
         createGroup: createGroupMutation.mutate, 
         deleteGroup: deleteGroupMutation.mutate,
+        updateGroup: updateGroupMutation.mutate,
+
         isCreatePending: createGroupMutation.isPending,
         isDeletePending: deleteGroupMutation.isPending,
+        isUpdatePending: updateGroupMutation.isPending,
     }
 }
 
