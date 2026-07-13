@@ -236,7 +236,7 @@ function GroupItem({groupId} : {groupId: number}){
     if(!group || !user) return;
 
     const isSelected = currentGroupId == groupId
-    const avatarUrl = group.avatarFileId ? `file/${group.avatarFileId}/view` : defaultGroupAvatar
+    const avatarUrl = group.avatarFileId ? API_ENDPOINTS.FILE.VIEW_FILE(group.avatarFileId) : defaultGroupAvatar
 
     function onClick(){
         setCurrentGroupId(groupId)
