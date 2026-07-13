@@ -105,6 +105,7 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
+    flex-shrink: 0;
     object-fit: cover;
 }
 
@@ -698,4 +699,131 @@
 
 .message-image:hover {
     opacity: 0.85; /* Hiệu ứng mờ nhẹ khi trỏ chuột vào ảnh báo hiệu có thể click */
+}
+
+/* ========================================== */
+/* Group Info Summary (Chỉnh sửa được)        */
+/* ========================================== */
+.group-info-summary {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+/* Wrapper bo ngoài avatar */
+.group-avatar-edit-wrapper {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid #f0f2f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.group-avatar-edit-wrapper.editable {
+    cursor: pointer;
+}
+
+.group-info-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Overlay đen mờ báo hiệu đổi ảnh */
+.group-avatar-edit-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.group-avatar-edit-overlay span {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.group-avatar-edit-wrapper.editable:hover .group-avatar-edit-overlay {
+    opacity: 1;
+}
+
+/* Thông tin Text */
+.group-info-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.group-info-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #050505;
+    margin: 0;
+}
+
+/* Ô nhập liệu chỉnh sửa tên nhóm */
+.group-info-name-input {
+    font-size: 20px;
+    font-weight: 600;
+    color: #050505;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-left: -12px; /* Bù trừ khoảng trống padding để thẳng lề với chữ "Số thành viên" */
+    outline: none;
+    width: 100%;
+    max-width: 320px;
+    background-color: transparent;
+    transition: all 0.2s;
+}
+
+.group-info-name-input:focus,
+.group-info-name-input:hover {
+    background-color: #f7f8fa;
+    border-color: #0084ff;
+    box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.1);
+}
+
+.group-info-count {
+    font-size: 14px;
+    color: #65676b;
+    margin: 0;
+}
+
+.group-info-count span {
+    font-weight: 600;
+    color: #0084ff;
+}
+
+/* Nút lưu thay đổi */
+.group-info-save-btn {
+    margin-top: 8px;
+    background-color: #0084ff;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    width: max-content;
+    transition: background-color 0.2s;
+}
+
+.group-info-save-btn:hover {
+    background-color: #0073e6;
 }

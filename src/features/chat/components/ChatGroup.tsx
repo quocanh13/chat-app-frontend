@@ -62,7 +62,7 @@ export function ChatGroupHeader(){
     }, [currentGroupId])
 
     const groupName = group?.name ?? ""
-    const groupAvatar = group?.avatarFileId ? `/files/${group.avatarFileId}/view` : defaultGroupAvatar
+    const groupAvatar = group?.avatarFileId ? API_ENDPOINTS.FILE.VIEW_FILE(group.avatarFileId) : defaultGroupAvatar
     const numMember = group?.members.length ? `${group.members.length} thành viên` : ``
 
     return <div className="chat-group-header">
@@ -88,26 +88,52 @@ function GroupInfoModal({ onCloseGroupInfo }: GroupInfoModalProps) {
     const { currentGroupId } = useChatStore()
     const { group } = useGroup(currentGroupId)
     const { addMember } = useMemberMutaion();
-    const { deleteGroup } = useGroupMutation()
+    const { deleteGroup, updateGroup } = useGroupMutation() 
     const { register, handleSubmit } = useForm<AddMemberFormData>({
         resolver: zodResolver(AddMemberFormSchema)
     });
+
+    const [editName, setEditName] = useState(group?.name ?? "");
+    const [selectedAvatar, setSelectedAvatar] = useState<File | null>(null);
+    const [previewAvatarUrl, setPreviewAvatarUrl] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     if(!group || !currentUser) {
         return null; 
     }
 
     const isCurrentUserHost = currentUser.id === group.hostId
-    const groupAvatrUrl = group.avatarFileId ? `/files/${group.avatarFileId}/view` : defaultGroupAvatar
+    const groupAvatarUrl = group.avatarFileId ? API_ENDPOINTS.FILE.VIEW_FILE(group.avatarFileId) : defaultGroupAvatar
+    const displayAvatar = previewAvatarUrl || groupAvatarUrl;
+    const isInfoChanged = editName.trim() !== group.name || selectedAvatar !== null;
 
     function onValid(data: AddMemberFormData) {
         if(group)
             addMember({groupId: group.id, username: data.username})
     }
-
     function onDeleteGroup(){
         if(group)
             deleteGroup({groupId: group.id})
+    }
+    function handleAvatarClick() {
+        if (isCurrentUserHost) fileInputRef.current?.click();
+    }
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedAvatar(file);
+            setPreviewAvatarUrl(URL.createObjectURL(file));
+        }
+    }
+    function handleSaveGroupInfo() {
+        if (group && updateGroup) {
+            updateGroup({
+                groupId: group.id,
+                name: editName !== group.name ? editName.trim() : undefined,
+                avatar: selectedAvatar ?? undefined
+            });
+            setSelectedAvatar(null); 
+        }
     }
 
     return (
@@ -119,10 +145,45 @@ function GroupInfoModal({ onCloseGroupInfo }: GroupInfoModalProps) {
                 </button>
 
                 <div className="group-info-summary">
-                    <img className="group-info-avatar" src={groupAvatrUrl} alt="Group Avatar" />
+                    <div 
+                        className={`group-avatar-edit-wrapper ${isCurrentUserHost ? 'editable' : ''}`}
+                        onClick={handleAvatarClick}
+                        title={isCurrentUserHost ? "Nhấn để đổi ảnh nhóm" : ""}
+                    >
+                        <img className="group-info-avatar" src={displayAvatar} alt="Group Avatar" />
+                        {isCurrentUserHost && (
+                            <div className="group-avatar-edit-overlay">
+                                <span>Đổi ảnh</span>
+                            </div>
+                        )}
+                    </div>
+                    <input 
+                        type="file" 
+                        accept="image/*"
+                        ref={fileInputRef} 
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }} 
+                    />
+
                     <div className="group-info-detail">
-                        <h4 className="group-info-name">{group.name}</h4>
+                        {isCurrentUserHost ? (
+                            <input 
+                                type="text" 
+                                className="group-info-name-input" 
+                                value={editName} 
+                                onChange={e => setEditName(e.target.value)} 
+                                placeholder="Nhập tên nhóm..."
+                            />
+                        ) : (
+                            <h4 className="group-info-name">{group.name}</h4>
+                        )}
                         <p className="group-info-count">Số thành viên: <span>{group.members.length}</span></p>
+
+                        {isCurrentUserHost && isInfoChanged && (
+                            <button className="group-info-save-btn" onClick={handleSaveGroupInfo}>
+                                Lưu thay đổi
+                            </button>
+                        )}
                     </div>
                 </div>
 
