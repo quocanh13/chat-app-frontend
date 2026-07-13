@@ -1,7 +1,8 @@
 import { request } from "../../lib/api";
 import { API_ENDPOINTS } from "../../shared/constant";
 import { ApiError, type ApiResponse } from "../../shared/types";
-import {  GetMyGroupListSchema, GroupSchema, type GetMyGroupListData } from "./group.dto";
+import { sendFile } from "../file/file.api";
+import {  GetMyGroupListSchema, GroupSchema, UpdateGroupResponseDataSchema, type GetMyGroupListData } from "./group.dto";
 
 interface GetGroupByIdInput{
     groupId: number
@@ -19,6 +20,11 @@ interface DeleteMemberInput{
 }
 interface DeleteGroupInput{
     groupId: number
+}
+interface UpdateGroupInput{
+    groupId: number,
+    avatar?: File,
+    name?: string
 }
 
 export async function getMyGroupList() : Promise<GetMyGroupListData> {
@@ -95,7 +101,6 @@ export async function deleteMember(input: DeleteMemberInput) {
     }
     return 
 }
-
 export async function deleteGroup(input: DeleteGroupInput) {
     const options: RequestInit = {
         method: "DELETE"
@@ -106,4 +111,31 @@ export async function deleteGroup(input: DeleteGroupInput) {
         throw new ApiError(result.message!, result.error, result.detail)
     }
     return 
+}
+export async function updateGroup(input: UpdateGroupInput) {
+    let avatarFileId = null
+    if(input.avatar)
+        avatarFileId = (await sendFile({file: input.avatar, type: "USER_AVATAR"})).id
+    const body = {
+        name: input.name,
+        avatarFileId
+    }
+    const options: RequestInit = {
+        method: "PATCH",
+        body: JSON.stringify(body),
+        headers: {
+            "content-type" : "application/json"
+        }
+    }
+    const response = await request(API_ENDPOINTS.GROUP.PATCH_GROUP(input.groupId), options);
+    const result = await response.json()
+    console.log(result)
+    if(!response.ok)
+        throw new ApiError(result.message!, result.error, result.detail)
+    const dto = UpdateGroupResponseDataSchema.safeParse(result)
+    console.log(dto.error?.flatten())
+    if(!dto.success)
+        throw new ApiError()
+
+    return dto.data
 }
