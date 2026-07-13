@@ -39,6 +39,11 @@ export const AddMemberFormSchema = z.object({
         .regex(/^[a-zA-Z0-9]+$/, INVALID_SCHEMA_MESSAGE.USERNAME_REGEX)
 })
 
+export const UpdateGroupResponseDataSchema = z.object({
+    id: z.int().positive(),
+    name: z.string(),
+    avatarFileId: z.int().positive().nullable()
+})
 
 
 export const NewMemberSchema = z.object({
