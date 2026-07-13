@@ -7,6 +7,7 @@ let attemp = 0
 
 export const socket = io("http://localhost:3000", {
     withCredentials: true,
+    autoConnect: false
 });
 
 socket.on("connect_error", (err)=>{
